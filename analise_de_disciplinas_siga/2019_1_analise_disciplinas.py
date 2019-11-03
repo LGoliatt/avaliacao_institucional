@@ -45,7 +45,7 @@ sns.set_context("paper", font_scale=1.2,
 path='./data/'
 
 csv={
-     'Docentes'     :'./data/2019_1_analise_disciplinas_ead_discentes.csv'  ',
+     'Docentes'     :'./data/2019_1_analise_disciplinas_ead_discentes.csv',
      'Discentes'    :'./data/2019_1_analise_disciplinas_ead_docentes.csv',
      
 }
@@ -70,21 +70,22 @@ Y = pd.concat(Y)
 X=X.reindex()
 Y=Y.reindex()
 
+
+W = pd.concat([X,Y], sort=False)
+
 #%%
 
 #lista_cursos=['77A', '65A', '34A', '04A', '23A', '65B', '65D','15A', '64A', 
 #                                                     '08GV', '87A']
 #lista_cursos=[u'08GV', u'63E', u'88A', '73BL', '63B', '71A']
-lista_cursos=[u'08GV', '71A']
+#ista_cursos=[u'08GV', '71A']
 #X.dropna(subset=['Curso Aluno'], inplace=True)
 #lista_cursos=[i.replace('/','-') for i in X['Curso Aluno'].unique()]
 #
 lista_cursos=X['Curso Aluno'].dropna().unique()
-lista_cursos=['66E']
 lista_cursos=[i.replace('/','-') for i in lista_cursos]
 lista_cursos.sort()
 #
-
 #%%
 
 #
@@ -173,65 +174,66 @@ Q = Y[Y.columns[~idx]]
 Q.columns = [ 'Q'+'{:02d}'.format(i+1) for i in range(len(Q.columns))]
 Y = pd.concat([C,Q], axis=1)
 #%%
-Z=[]
-for c,df in Y.groupby(['Cursos']):
-    aux=df.copy()
-    for i in c.split('|'):
-        aux['Cursos']=i
-        Z.append(aux)
 
-Z=pd.concat(Z)
-
-Z['Curso']=Z['Cursos']
-
-idx = Z['Curso'].isin(lista_cursos)
-Z = Z[idx]
+#Z=[]
+#for c,df in Y.groupby(['Cursos']):
+#    aux=df.copy()
+#    for i in c.split('|'):
+#        aux['Cursos']=i
+#        Z.append(aux)
+#
+#Z=pd.concat(Z)
+#
+#Z['Curso']=Z['Cursos']
+#
+#idx = Z['Curso'].isin(lista_cursos)
+#Z = Z[idx]
 
 #%% 
-list(X['Disciplina'].unique())
-
-G = []
-for a, df in X.groupby(['Curso Aluno']):
-    num_alunos=df['Aluno'].unique().shape[0]
-    lista_disciplinas=list(df['Disciplina'].unique())
-    lista_disciplinas = np.unique(lista_disciplinas)
-    ind_disc = df['ind_disc'].unique()
-    num_disciplinas = len(lista_disciplinas)
-    G.append({'Curso':a, 'Num. Alunos':num_alunos, 'Disciplinas':lista_disciplinas, 
-              'Num. Disciplinas':num_disciplinas,
-              'ind_disc':ind_disc})
-
-G1=pd.DataFrame(G); G1.index=G1['Curso'].values
-writer = pd.ExcelWriter('quantitativo_info_cursos.xlsx')
-G1.drop(['ind_disc','Disciplinas', 'Num. Disciplinas'], axis=1).to_excel(writer,'Alunos por Disciplina', index=False)
-
-H=[]
-for c in G1['Curso']:
-    for i in G1['ind_disc']:
-        for j in i:
-            df1=Z[(Z['ind_disc']==j) & (Z['Curso']==c)]
-            if len(df1)>0:
-                print(c,df1.Curso.unique(), len(df1))
-                H.append(df1)
-                aux=df1
-
-H=pd.concat(H)
-
-J=[]
-for a, df in H.groupby(['Cursos']):
-    dic={'Departamento':'Num. Departamentos','Professor':'Num. Professores', 
-         'Disciplina':'Num. Disciplinas', 'ind_disc':'Num. Turmas'}
-    aux={'Curso':a}
-    for i in dic:
-        print(a,dic[i],df[i].unique().shape[0])
-        aux[dic[i]]=df[i].unique().shape[0]
-
-    J.append(aux)
-    
-J1=pd.DataFrame(J); J1.index=J1['Curso'].values
-
-J1.to_excel(writer,'Quantitativos por Curso', index=False)
-writer.save()
+#list(X['Disciplina'].unique())
+#
+#G = []
+#for a, df in X.groupby(['Curso Aluno']):
+#    num_alunos=df['Aluno'].unique().shape[0]
+#    lista_disciplinas=list(df['Disciplina'].unique())
+#    lista_disciplinas = np.unique(lista_disciplinas)
+#    ind_disc = df['ind_disc'].unique()
+#    num_disciplinas = len(lista_disciplinas)
+#    G.append({'Curso':a, 'Num. Alunos':num_alunos, 'Disciplinas':lista_disciplinas, 
+#              'Num. Disciplinas':num_disciplinas,
+#              'ind_disc':ind_disc})
+#
+#G1=pd.DataFrame(G); G1.index=G1['Curso'].values
+#writer = pd.ExcelWriter('quantitativo_info_cursos.xlsx')
+#G1.drop(['ind_disc','Disciplinas', 'Num. Disciplinas'], axis=1).to_excel(writer,'Alunos por Disciplina', index=False)
+#
+#H=[]
+#for c in G1['Curso']:
+#    for i in G1['ind_disc']:
+#        for j in i:
+#            df1=Z[(Z['ind_disc']==j) & (Z['Curso']==c)]
+#            if len(df1)>0:
+#                print(c,df1.Curso.unique(), len(df1))
+#                H.append(df1)
+#                aux=df1
+#
+#H=pd.concat(H)
+#
+#J=[]
+#for a, df in H.groupby(['Cursos']):
+#    dic={'Departamento':'Num. Departamentos','Professor':'Num. Professores', 
+#         'Disciplina':'Num. Disciplinas', 'ind_disc':'Num. Turmas'}
+#    aux={'Curso':a}
+#    for i in dic:
+#        print(a,dic[i],df[i].unique().shape[0])
+#        aux[dic[i]]=df[i].unique().shape[0]
+#
+#    J.append(aux)
+#    
+#J1=pd.DataFrame(J); J1.index=J1['Curso'].values
+#
+#J1.to_excel(writer,'Quantitativos por Curso', index=False)
+#writer.save()
 #%%
 fn1 = './aux/'+'departamentos_nomes_siglas.csv'
 dataframe_departamentos= pd.read_csv(fn1, encoding = 'latin-1')
@@ -248,11 +250,11 @@ for i in X['Departamento']:
 X['Departamento'] = dep_list   
 
 #%% 
-dep_list=[]    
-for i in Z['Departamento']:
-    dep_list.append(dic[i])
-
-Z['Departamento'] = dep_list    
+#dep_list=[]    
+#for i in Z['Departamento']:
+#    dep_list.append(dic[i])
+#
+#Z['Departamento'] = dep_list    
 #%% 
 fn2 = './aux/'+'cursos_nomes_siglas.csv'
 dataframe_cursos= pd.read_csv(fn2)
@@ -265,6 +267,49 @@ for i in range(len(dataframe_cursos)):
 dicionario_cursos=dic
 
 #%%
+#
+# trtamento do código e-MEC
+#
+# https://medium.com/capivarapython/itera%C3%A7%C3%A3o-em-pandas-dataframes-e-desempenho-72d2d12522e1
+
+fn3 = './aux/'+'referencial-de-cursos-ufjfe-mec.csv'
+dataframe_emec= pd.read_csv(fn3, sep='\t')
+
+codigo_emec=[]
+for index, row in dataframe_emec.iterrows():
+    c=row['Código SIGA'].split(';')
+    #row.drop(['Código SIGA'],inplace=True)
+    for i in c:
+        j=i.replace(' ','').replace(' ','').replace(' ','')
+        row['Código SIGA']=str(j)
+        codigo_emec.append(dict(row))
+        #print(j,c,row.values)
+
+
+codigo_emec=pd.DataFrame(codigo_emec)
+    
+#%%
+dic_codigo_emec={}
+dic_nome_emec={}
+
+for index, row in codigo_emec.iterrows():
+    dic_codigo_emec[row['Código SIGA']]=row['Código e-MEC']
+    dic_nome_emec[row['Código SIGA']]=row['Curso']
+    
+    
+#%%
+dic={}
+for i in range(len(dataframe_cursos)): 
+    d, s = dataframe_cursos.iloc[i]['CODIGO'], dataframe_cursos.iloc[i][u'NOME']
+    dic[d]=s
+    
+dicionario_cursos=dic
+
+
+X['Código e-MEC']=[dic_codigo_emec[i] for i in X['Curso Aluno']]
+X['Curso Nome']=[dic_nome_emec[i] for i in X['Curso Aluno']]
+X['Curso SIGA']=X['Curso Aluno'].values
+#%%
 aux=[]
 for l in lista_cursos:
     df = X[X['Curso Aluno']==l]
@@ -274,15 +319,17 @@ X = pd.concat(aux)
 X = X.reindex()
 lista_dep = X['Departamento'].dropna().unique(); lista_dep.sort()
 
-dic_cursos={i:dicionario_cursos[i]+' ('+i+')' for k,i in enumerate(lista_cursos)}
-nomes_cursos={}
-for c in dic_cursos:
-    nomes_cursos[c] = dic_cursos[c].replace('-','').replace('  ',' ').replace(' (',' (').replace(' ','\n').replace('/','-')
-    nomes_cursos[c] = nomes_cursos[c].replace('EM\n','EM ').replace('DA\n','DA ')
+#%%
 
-tab_cursos=pd.DataFrame( [{' Sigla':i, 'Nome do Curso':dicionario_cursos[i]} for k,i in enumerate(lista_cursos)] )
-print (tab_cursos)
-tab_cursos.to_csv(path_or_buf='cursos_participantes.csv',index=False)
+#dic_cursos={i:dicionario_cursos[i]+' ('+i+')' for k,i in enumerate(lista_cursos)}
+#nomes_cursos={}
+#for c in dic_cursos:
+#    nomes_cursos[c] = dic_cursos[c].replace('-','').replace('  ',' ').replace(' (',' (').replace(' ','\n').replace('/','-')
+#    nomes_cursos[c] = nomes_cursos[c].replace('EM\n','EM ').replace('DA\n','DA ')
+#
+#tab_cursos=pd.DataFrame( [{' Sigla':i, 'Nome do Curso':dicionario_cursos[i]} for k,i in enumerate(lista_cursos)] )
+#print (tab_cursos)
+#tab_cursos.to_csv(path_or_buf='cursos_participantes.csv',index=False)
 
 #%% 
 tab=[]
@@ -301,7 +348,11 @@ for i, df in X.groupby(['Curso Aluno']):
              'Bolsa Apoio':df1['Bolsa Apoio'].unique()[0],
              'Sigla Curso':df1['Curso Aluno'].unique()[0],
              'Estado':df1['Estado'].unique()[0],
-             'Curso':nomes_cursos[i],
+             #'Curso':nomes_cursos[i],             
+             'Curso EMEC':df1['Código e-MEC'].unique()[0],             
+             'Curso Nome':df1['Curso Nome'].unique()[0],             
+             'Curso':df1['Curso Nome'].unique()[0],             
+             'Curso SIGA':df1['Curso Aluno'].unique()[0],             
              'IRA':df1['IRA'].unique()[0]}
         aluno.append(aux)
         info_aluno.append(aux)
@@ -372,7 +423,7 @@ g.set_ylim([0,1])
 g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
 g.set_title(u'Número de disciplinas')
 g.set_ylabel(u'Porcentagem de discentes participantes')
-g.legend(title='Número de\nDisciplinas', loc='center left', bbox_to_anchor=(1.0, 0.5))
+g.legend(title='Número de\nDisciplinas Avaliadas', loc='center left', bbox_to_anchor=(1.0, 0.5))
 pl.savefig('quantitativos_no_de_disciplinas_por_curso.png', dpi=300,bbox_inches='tight')
 
 #sns.set()
@@ -410,14 +461,14 @@ pl.savefig('quantitativos_estado_de_origem_por_curso.png', dpi=300,bbox_inches='
 
 print ("Número de docentes participantes por curso:")
 tab_docentes=[]
-for i, df in Z.groupby(['Curso']):
+for i, df in X.groupby(['Curso Nome']):
     n= df['Professor'].unique().shape[0]
     print (i,'\t',len(df)/n)
     tab_docentes.append({'NA':n, 'NF':len(df),
                 'Curso':i})   
     
 tab_docentes=pd.DataFrame(tab_docentes)
-tab_docentes['Cursos']=[nomes_cursos[i] for i in tab_docentes['Curso']]
+tab_docentes['Cursos']=[i for i in tab_docentes['Curso']]
 
 
 pl.figure()
@@ -435,9 +486,9 @@ g.savefig('numero_participantes_curso_docentes.png', dpi=300,bbox_inches='tight'
 
 #%%
 
-print ("Número de participantes por curso:")
+print ("Número de discentes participantes por curso:")
 tab=[]
-for i, df in X.groupby(['Curso Aluno']):
+for i, df in X.groupby(['Curso Nome']):
     n= df['Aluno'].unique().shape[0]
     print (i,'\t',len(df)/n)
     tab.append({'NA':n, 'NF':len(df),
@@ -446,13 +497,12 @@ for i, df in X.groupby(['Curso Aluno']):
     
 tab=pd.DataFrame(tab)
 tab.to_csv('tabela_informacoes_2'+'.csv')
-tab['Cursos']=[nomes_cursos[i] for i in tab['Curso']]
-
+tab['Cursos']=[i for i in tab['Curso']]
 pl.figure()
 g=sns.catplot(x='Cursos', y='NA', data=tab, kind='bar',palette='Blues_d',
                aspect=2, order=tab['Cursos'])
 g.set_xticklabels(rotation=90)
-g.set_xlabels('Curso (sigla)')
+g.set_xlabels('')#'Curso (sigla)')
 g.set_ylabels(u'Número de participantes')
 for p in g.ax.patches:
         g.ax.annotate("%d" % p.get_height(), (p.get_x() + p.get_width(), p.get_height()),
@@ -460,21 +510,18 @@ for p in g.ax.patches:
 
 g.savefig('numero_participantes_curso.png', dpi=300,bbox_inches='tight')
 
-
-
-
-tab['Curso*'] = [dic_cursos[i]+' ('+i+')'  for i in tab['Curso']]
-pl.figure()
-g=sns.catplot(x='Cursos', y='NA', data=tab, kind='bar',palette='Blues_d',
-               aspect=2, errwidth=0,)
-g.set_xticklabels(rotation=90)
-g.set_xlabels('Curso (sigla)')
-g.set_ylabels(u'Número de participantes')
-for p in g.ax.patches:
-        g.ax.annotate("%d" % p.get_height(), (p.get_x() + p.get_width(), p.get_height()),
-             ha='right', va='center', rotation=90, xytext=(0, 20), textcoords='offset points')  #vertical bars
-
-g.savefig('numero_participantes_curso_nome.png', dpi=300,bbox_inches='tight')
+#tab['Curso*'] = [dic_cursos[i]+' ('+i+')'  for i in tab['Curso']]
+#pl.figure()
+#g=sns.catplot(x='Cursos', y='NA', data=tab, kind='bar',palette='Blues_d',
+#               aspect=2, errwidth=0,)
+#g.set_xticklabels(rotation=90)
+#g.set_xlabels('')#'Curso (sigla)')
+#g.set_ylabels(u'Número de participantes')
+#for p in g.ax.patches:
+#        g.ax.annotate("%d" % p.get_height(), (p.get_x() + p.get_width(), p.get_height()),
+#             ha='right', va='center', rotation=90, xytext=(0, 20), textcoords='offset points')  #vertical bars
+#
+#g.savefig('numero_participantes_curso_nome.png', dpi=300,bbox_inches='tight')
 
 
 pl.figure()
@@ -485,6 +532,7 @@ g.set_ylabel(u'Ocorrência')
 g.set_xlim([1,ct.sum().max()])
 pl.savefig('numero_participantes_disciplina_histograma.png', dpi=300,bbox_inches='tight')
 
+#%%
 
 #pl.figure()
 #ct = pd.crosstab(X['Disciplina'], X['Aluno'])
@@ -494,14 +542,8 @@ pl.savefig('numero_participantes_disciplina_histograma.png', dpi=300,bbox_inches
 #g.set_xlim([1,ct.sum().max()])
 #pl.savefig('numero_participantes_disciplina_histograma.png', dpi=300,bbox_inches='tight')
 
-aux_2=[]
-for i in X['Curso Aluno']:
-    aux_2.append(nomes_cursos[i])
-
-X['Curso Discente'] = aux_2
-
 pl.figure()
-ct = pd.crosstab(X['Disciplina'], [X['Aluno'], X['Curso Discente']])
+ct = pd.crosstab(X['Disciplina'], [X['Aluno'], X['Curso Nome']])
 tab = ct.sum().unstack().mean()
 print(tab)
 
@@ -520,19 +562,6 @@ pl.savefig('numero_formularios_respondidos_discente_curso.png', dpi=300,bbox_inc
 
 pl.figure()
 sns.set_palette("Blues_d", len(lista_cursos))
-
-tab_nome = tab.copy()
-#tab_nome.index = [dic_cursos[i]+' ('+i+')'  for i in tab.index.values]
-print(tab_nome)
-g=tab_nome.plot(kind='bar')
-g.set_ylabel(u'Número médio de formulários\nrespondidos por discente')  
-g.set_xlabel('Curso')
-pl.legend('')
-for p in g.patches:
-        g.annotate("%.2f" % p.get_height(), (p.get_x() + p.get_width(), p.get_height()),
-             ha='right', va='center', rotation=90, xytext=(0, 15), textcoords='offset points')  #vertical bars
-
-pl.savefig('numero_formularios_respondidos_discente_curso_nome.png', dpi=300,bbox_inches='tight')
 
 
 #pl.figure()
@@ -565,7 +594,7 @@ A = []
 for i in range(len(X)):
     df = X.iloc[i]
     for q in questoes:
-        dic = dict(df[cabecalho])
+        dic = dict(df)#[cabecalho])
         dic['Questao']  = q#.decode('latin1').encode('utf8')
         dic['Resposta'] = df[q]
         #dic['Resposta'] = 'NA' if np.isnan(df[q]) else str(df[q])
@@ -576,28 +605,15 @@ for i in range(len(X)):
         A.append(dic)
     
 A = pd.DataFrame(A)
-#A.dropna(inplace=True)
-A['Cursos Atendidos'] = [len(i.split('|')) for i in A['Cursos']]
-
-aux_2=[]
-for i in A['Curso Aluno']:
-    aux_2.append(nomes_cursos[i])
-    
-A['Curso Discente'] = aux_2
-
-A['Curso Aluno']=[i.replace('/','-') for i in A['Curso Aluno']]
-
-#A['Resposta'].replace(['NA',0], inplace=True)
-
 lista_dep = A['Departamento'].dropna().unique(); lista_dep.sort()
 
 #%%    
 
 B = []    
-for i in range(len(Z)):
-    df = Z.iloc[i]
+for i in range(len(Y)):
+    df = Y.iloc[i]
     for q in questoes_docentes:
-        dic = dict(df[cabecalho_docente])
+        dic = dict(df)#[cabecalho_docente])
         dic['Questao']  = q#.decode('latin1').encode('utf8')
         #dic['Resposta'] = df[q]
         #dic['Resposta'] = 'NA' if np.isnan(df[q]) else str(df[q])
@@ -606,7 +622,6 @@ for i in range(len(Z)):
         B.append(dic)
     
 B = pd.DataFrame(B)
-B['Curso']=B['Cursos']
 B['Questao (Docentes)']=B['Questao']
 #A.dropna(inplace=True)
 #A['Cursos Atendidos'] = [len(i.split('|')) for i in A['Cursos']]
@@ -646,7 +661,7 @@ lista_dep = B['Departamento'].dropna().unique(); lista_dep.sort()
 #sns.set(palette='Blues_d',)
 sns.set_palette("Set1", 15, .99)
 pl.figure()
-ct = pd.crosstab(A['Curso Discente'], A['Ano Ingresso'].astype('str'))
+ct = pd.crosstab(A['Curso Nome'], A['Ano Ingresso'].astype('str'))
 ct = ct.T/ct.sum(axis=1).values
 g = ct.T.plot.bar(stacked=True, )
 g.set_ylim([0,1])
@@ -661,7 +676,7 @@ pl.savefig('ano_de_ingresso_geral.png', dpi=300,bbox_inches='tight')
 #sns.set(palette='Blues_d',)
 sns.set_palette("Set1", 15, .99)
 pl.figure()
-ct = pd.crosstab(A['Curso Discente'], A['Tipo Ingresso'].astype('str'))
+ct = pd.crosstab(A['Curso Nome'], A['Tipo Ingresso'].astype('str'))
 ct = ct.T/ct.sum(axis=1).values
 g = ct.T.plot.bar(stacked=True, )
 g.set_ylim([0,1])
@@ -673,10 +688,12 @@ pl.savefig('tipo_de_ingresso_geral.png', dpi=300,bbox_inches='tight')
 #pl.show()
 #%%
 
-for d, df in A.groupby(['Curso Discente']):
-    print(d)
-    id_curso=d.split('(')[1].split(')')[0]
-    id_curso=id_curso.replace('/','-')
+for d, df in A.groupby(['Código e-MEC']):
+    id_curso=str(d)#str(df['Código e-MEC'].unique())
+    print(d, id_curso)
+    
+    #id_curso=id_curso.replace('/','-')
+    
     pl.figure()
     df1=df.drop_duplicates(subset=['Aluno', 'Tipo Ingresso', 'Ano Ingresso'])
     n_alunos=len(df1)
@@ -689,7 +706,7 @@ for d, df in A.groupby(['Curso Discente']):
         g.set_yticklabels(['{:.0f}'.format(x*1) for x in g.get_yticks()]) 
     tit=re.sub('\n', ' ', d)+' - Total de alunos:'+str(n_alunos)
     g.set_title(tit)
-    g.legend(title='Ano',loc='center left', bbox_to_anchor=(1.0, 0.5))
+    g.legend(title='Ano', )#loc='center left', bbox_to_anchor=(1.0, 0.5))
     pl.savefig('ingresso_discentes_curso_ano_'+id_curso+'.png', dpi=300,bbox_inches='tight')
     #ct = ct.T/ct.sum(axis=1).values
     #g = ct.plot.bar(stacked=True)
@@ -701,7 +718,7 @@ for d, df in A.groupby(['Curso Discente']):
         g.set_yticklabels(['{:.0f}'.format(x*1) for x in g.get_yticks()]) 
     tit=re.sub('\n', ' ', d)+' - Total de alunos:'+str(n_alunos)
     g.set_title(tit)
-    g.legend(title='Tipo de ingresso',loc='center left', bbox_to_anchor=(1.0, 0.5))
+    g.legend(title='Tipo de ingresso',)#loc='center left', bbox_to_anchor=(1.0, 0.5))
     pl.savefig('ingresso_discentes_curso_tipo_'+id_curso+'.png', dpi=300,bbox_inches='tight')
     #
     n_colors=df1['Estado'].unique().shape[0]
@@ -712,7 +729,7 @@ for d, df in A.groupby(['Curso Discente']):
     tit=u'Estado de origem - Total de alunos:'+str(n_alunos)
     g.set_title(tit)
     g.set_ylabel(u'Número de discentes respondentes')
-    g.legend(title='Estado', loc='center left', bbox_to_anchor=(1.0, 0.5))
+    g.legend(title='Estado',)# loc='center left', bbox_to_anchor=(1.0, 0.5))
     pl.savefig('quantitativos_estado_de_origem_'+id_curso+'.png', dpi=300,bbox_inches='tight')
 
     ct=pd.crosstab(df1['Ano Ingresso'], df1['Bolsa Apoio']); 
@@ -721,7 +738,7 @@ for d, df in A.groupby(['Curso Discente']):
     tit=u'Bolsas de Apoio - Total de alunos:'+str(n_alunos)
     g.set_title(tit)
     g.set_ylabel(u'Número de discentes com bolsa de apoio')
-    g.legend(title='Bolsa de Apoio', loc='center left', bbox_to_anchor=(1.0, 0.5))
+    g.legend(title='Bolsa de Apoio',)# loc='center left', bbox_to_anchor=(1.0, 0.5))
     pl.savefig('quantitativos_bolsa_de_apoio_'+id_curso+'.png', dpi=300,bbox_inches='tight')
 
     pl.show()
@@ -766,7 +783,7 @@ pl.savefig('resposta_questoes_geral_docentes.png', dpi=300,bbox_inches='tight')
 #pl.show()
     
 #%%
-for d, df in A.groupby(['Curso Aluno']):
+for d, df in A.groupby(['Código e-MEC']):
     #d=d.replace('/','-')
     print(d)
     #df=df[df['Resposta']!='NA']
@@ -781,32 +798,33 @@ for d, df in A.groupby(['Curso Aluno']):
     g.set_ylim([0,1])
     g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
     g.set_ylabel(u'Porcentagem de questões respondidas')
-    g.set_title(dic_cursos[d])
-    pl.savefig('resposta_questoes_curso_'+d+'.png', dpi=300,bbox_inches='tight')
+    #g.set_title(dic_cursos[d])
+    g.set_title(d)
+    pl.savefig('resposta_questoes_curso_'+str(d)+'.png', dpi=300,bbox_inches='tight')
     #pl.show()
     
 #%%
-for d, df in B.groupby(['Curso']):
-    print(d)
-    #try:
-    #    df=df[df['Resposta']!='NA']
-    #except:
-    #    pass
-
-    n_colors=B['Questao (Docentes)'].unique().shape[0]
-    sns.set_palette("Set1", n_colors=n_colors,)   
-
-    pl.figure()
-    ct = pd.crosstab(df['Questao (Docentes)'], df['Resposta'].astype('str'))
-    ct = ct/(ct.sum(axis=1).mean())
-    g = ct.plot.bar(stacked=True)
-    g.legend(title='Escala\nLikert', loc='center left', bbox_to_anchor=(1.0, 0.5))
-    g.set_ylim([0,1])
-    g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
-    g.set_ylabel(u'Porcentagem de questões respondidas\npelos docentes')
-    g.set_title(dic_cursos[d])
-    pl.savefig('resposta_questoes_curso_'+d+'_docentes.png', dpi=300,bbox_inches='tight')
-    #pl.show()
+#for d, df in B.groupby(['Curso']):
+#    print(d)
+#    #try:
+#    #    df=df[df['Resposta']!='NA']
+#    #except:
+#    #    pass
+#
+#    n_colors=B['Questao (Docentes)'].unique().shape[0]
+#    sns.set_palette("Set1", n_colors=n_colors,)   
+#
+#    pl.figure()
+#    ct = pd.crosstab(df['Questao (Docentes)'], df['Resposta'].astype('str'))
+#    ct = ct/(ct.sum(axis=1).mean())
+#    g = ct.plot.bar(stacked=True)
+#    g.legend(title='Escala\nLikert', loc='center left', bbox_to_anchor=(1.0, 0.5))
+#    g.set_ylim([0,1])
+#    g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
+#    g.set_ylabel(u'Porcentagem de questões respondidas\npelos docentes')
+#    g.set_title(dic_cursos[d])
+#    pl.savefig('resposta_questoes_curso_'+d+'_docentes.png', dpi=300,bbox_inches='tight')
+#    #pl.show()
     
 #%%
 for d, df in A.groupby(['Departamento']):
@@ -879,7 +897,7 @@ for d, df in A.groupby(['Questao']):
     pl.figure()
     #df=df[df['Resposta']!='NA']
 
-    ct = pd.crosstab(df['Curso Discente'], df['Resposta'].astype('str'))
+    ct = pd.crosstab(df['Curso Nome'], df['Resposta'].astype('str'))
     for i in range(len(ct)):
         ct.iloc[i] = ct.iloc[i]/ct.iloc[i].sum()
         
@@ -895,35 +913,36 @@ for d, df in A.groupby(['Questao']):
 
 #%%
 #sns.set()
-for d, df in A.groupby(['Curso Aluno']):
+for d, df in A.groupby(['Curso Nome']):
     print('\n'*3)
     ii=0
     df.dropna(subset=['Departamento'], inplace=True)
     #df=df[df['Resposta']!='NA']
-    for w, df1 in df.groupby('Disciplina'):
-        n_aluno_disc=df1['Aluno'].unique().shape[0]
-        dep_disc=df1['Departamento'].unique()[0]
-        n_prof_disc = df1['Professor'].unique().shape[0]
-        n_turma_disc=df1['Turma'].unique().shape[0]
-        ii+=1
-        print(ii, d,w, dep_disc, n_aluno_disc, )
-
-        #df1=df1[df1['Resposta']!='NA']
-        df1.dropna(subset=['Resposta'], inplace=True)
-        pl.figure()
-        ct = pd.crosstab(df['Questao'], df['Resposta'].astype('str'))
-        ct = ct/(ct.sum(axis=1).mean())
-        g = ct.plot.bar(stacked=True)
-        g.legend(title='Escala\nLikert', loc='center left', bbox_to_anchor=(1.0, 0.5))
-        tit='Curso: '+d+', Disciplina: '+w+'\nDepartamento: '+dep_disc+', Total de Professores:'+str(n_prof_disc)+'\nTotal de alunos do curso:'+str(n_aluno_disc)+', No. de turmas:'+str(n_turma_disc)
-        g.set_title(tit)
-        g.set_ylim([0,1])
-        g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
-        g.set_ylabel(u'Porcentagem de questões respondidas\npelos alunos')
-        g.set_xlabel(u'Questão (discente)')
-        pl.savefig('resposta_questoes_disciplina__'+str(w)+'__curso'+d+'.png', dpi=300,bbox_inches='tight')
-
-        pl.show()
+    # as loinhas comentadas abaixo geram muitos gráficos -- descomentar se necessário
+#    for w, df1 in df.groupby('Disciplina'):
+#        n_aluno_disc=df1['Aluno'].unique().shape[0]
+#        dep_disc=df1['Departamento'].unique()[0]
+#        n_prof_disc = df1['Professor'].unique().shape[0]
+#        n_turma_disc=df1['Turma'].unique().shape[0]
+#        ii+=1
+#        print(ii, d,w, dep_disc, n_aluno_disc, )
+#
+#        #df1=df1[df1['Resposta']!='NA']
+#        df1.dropna(subset=['Resposta'], inplace=True)
+#        pl.figure()
+#        ct = pd.crosstab(df['Questao'], df['Resposta'].astype('str'))
+#        ct = ct/(ct.sum(axis=1).mean())
+#        g = ct.plot.bar(stacked=True)
+#        g.legend(title='Escala\nLikert', loc='center left', bbox_to_anchor=(1.0, 0.5))
+#        tit='Curso: '+d+', Disciplina: '+w+'\nDepartamento: '+dep_disc+', Total de Professores: '+str(n_prof_disc)+'\nTotal de alunos do curso: '+str(n_aluno_disc)+', No. de turmas: '+str(n_turma_disc)
+#        g.set_title(tit)
+#        g.set_ylim([0,1])
+#        g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
+#        g.set_ylabel(u'Porcentagem de questões respondidas\npelos alunos')
+#        g.set_xlabel(u'Questão (discente)')
+#        pl.savefig('resposta_questoes_disciplina__'+str(w)+'__curso'+d+'.png', dpi=300,bbox_inches='tight')
+#
+#        pl.show()
 
 #%%
 #for d, df in A.groupby(['Departamento']):
@@ -974,7 +993,7 @@ pl.title(u"Correlação entre as questões (alunos)")
 pl.savefig('matriz_corr.png', dpi=300,bbox_inches='tight')
 #pl.show()
 #%%
-corr = Z[questoes_docentes].corr()
+corr = Y[questoes_docentes].corr()
 mask = np.zeros_like(corr, dtype=np.bool)
 mask[np.triu_indices_from(mask)] = True
 
@@ -989,50 +1008,51 @@ sns.heatmap(corr, mask=mask, cmap=cmap, #vmin=.0, vmax=1.,
 pl.title(u"Correlação entre as questões (docentes)")
 pl.savefig('matriz_corr_docentes.png', dpi=300,bbox_inches='tight')
 #%%
-A['Cursos']=A['Curso Aluno']
+A['Cursos']=A['Curso Nome']
 C = pd.concat([A,B],)
 C.drop(['Questao (Docentes)'], inplace=True,axis=1)
 
-#%%
-for c, df1 in C.groupby(['Cursos',]):
-    Q=pd.DataFrame()
-    for d, df in df1.groupby(['Tipo Avaliacao']):
-        print(c,d)
-        df=df[df['Resposta']!='NA']
-        ct = pd.crosstab(index=df['Questao'], columns=[df['Resposta'].astype('str'),])
-        ct.index=[i+'('+d[0]+')' for i in ct.index]
-        #print(ct)    
-        for i in range(len(ct)):
-            ct.iloc[i] = ct.iloc[i]/ct.iloc[i].sum()
-    
-        Q=pd.concat([Q,ct])    
-        
-    pl.figure()
-    g = Q.sort_index().plot.bar(stacked=True,figsize=(12,4))
-    g.legend(title='Escala\nLikert', loc='center left', bbox_to_anchor=(1.0, 0.5))
-    g.set_title(c)
-    g.set_title(dic_cursos[c])
-    g.set_ylim([0,1])
-    g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()])
-    #g.set_aspect(aspect=0.2,)
-    g.set_ylabel(u'Porcentagem de questões respondidas')
-    g.set_xlabel('(A): alunos; (D): docentes')
-    pl.savefig('comparacao_vert_resposta_curso_'+c+'.png', dpi=300,bbox_inches='tight')
-    pl.show()
-    
 
-    pl.figure()
-    g = Q.sort_index().plot.barh(stacked=True,figsize=(4,12))
-    g.legend(title='Escala\nLikert', loc='center left', bbox_to_anchor=(1.0, 0.5))
-    g.set_title(c)
-    g.set_title(dic_cursos[c])
-    g.set_xlim([0,1])
-    g.set_xticklabels(['{:.0f}%'.format(x*100./5) for x in g.get_yticks()])
-    #g.set_aspect(aspect=0.2,)
-    g.set_xlabel(u'Porcentagem de questões respondidas')
-    g.set_ylabel('(A): alunos; (D): docentes')
-    pl.savefig('comparacao_hori_resposta_curso_'+c+'.png', dpi=300,bbox_inches='tight')
-    pl.show()
+#%%
+#for c, df1 in C.groupby(['Cursos',]):
+#    Q=pd.DataFrame()
+#    for d, df in df1.groupby(['Tipo Avaliacao']):
+#        print(c,d)
+#        df=df[df['Resposta']!='NA']
+#        ct = pd.crosstab(index=df['Questao'], columns=[df['Resposta'].astype('str'),])
+#        ct.index=[i+'('+d[0]+')' for i in ct.index]
+#        #print(ct)    
+#        for i in range(len(ct)):
+#            ct.iloc[i] = ct.iloc[i]/ct.iloc[i].sum()
+#    
+#        Q=pd.concat([Q,ct])    
+#        
+#    pl.figure()
+#    g = Q.sort_index().plot.bar(stacked=True,figsize=(12,4))
+#    g.legend(title='Escala\nLikert', loc='center left', bbox_to_anchor=(1.0, 0.5))
+#    g.set_title(c)
+#    g.set_title(dic_cursos[c])
+#    g.set_ylim([0,1])
+#    g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()])
+#    #g.set_aspect(aspect=0.2,)
+#    g.set_ylabel(u'Porcentagem de questões respondidas')
+#    g.set_xlabel('(A): alunos; (D): docentes')
+#    pl.savefig('comparacao_vert_resposta_curso_'+c+'.png', dpi=300,bbox_inches='tight')
+#    pl.show()
+#    
+#
+#    pl.figure()
+#    g = Q.sort_index().plot.barh(stacked=True,figsize=(4,12))
+#    g.legend(title='Escala\nLikert', loc='center left', bbox_to_anchor=(1.0, 0.5))
+#    g.set_title(c)
+#    g.set_title(dic_cursos[c])
+#    g.set_xlim([0,1])
+#    g.set_xticklabels(['{:.0f}%'.format(x*100./5) for x in g.get_yticks()])
+#    #g.set_aspect(aspect=0.2,)
+#    g.set_xlabel(u'Porcentagem de questões respondidas')
+#    g.set_ylabel('(A): alunos; (D): docentes')
+#    pl.savefig('comparacao_hori_resposta_curso_'+c+'.png', dpi=300,bbox_inches='tight')
+#    pl.show()
 
 #%%
 #for (c,d), df in C.groupby(['Cursos','Questao']):
@@ -1062,28 +1082,23 @@ for c, df1 in C.groupby(['Cursos',]):
     
 #%%
 dir_pdf='./relatorios_pdf'
-os.system('mkdir '+dir_pdf)    
-for curso in dic_cursos:
-    print(curso)
-    
-    campus='Juiz de Fora' if len(curso.split('GV'))==1 else 'Governador Valadares'
-    
-    nome_curso, _ = dic_cursos[curso].split(' (')
-    ano=int(A['Ano'].unique()[0])
+os.system('mkdir '+dir_pdf)
+
+for cod_emec, df1 in X.groupby(['Código e-MEC']):
+    nome_curso = df1['Curso Nome'].unique()[0]
+    ano = df1['Ano'].unique()[0] if len(df1['Ano'].unique())==1 else -1
     df1[u'Período']=[int(i) for i in df1[u'Período']]
     periodo=df1[u'Período'].unique()
+    n_alunos_respondentes  = df1.shape[0]
+    #n_prof_respondentes   = 
     if len(periodo)==1:
         periodo=periodo[0]
     else:
         print('Erro na contagem de perídos para o curso '+nome_curso)
         break
-        
-    df1=C.loc[(C['Cursos']==curso)];
-    
-    n_alunos_respondentes  = df1.loc[df1['Tipo Avaliacao']=='ALUNO_TURMA']['Aluno'].unique().shape[0]
-    n_prof_respondentes   = df1.loc[df1['Tipo Avaliacao']=='DOCENTE_TURMA']['Professor'].unique().shape[0]
 
-    
+    print(cod_emec, nome_curso, ano, periodo, n_alunos_respondentes)
+
     head =''
     head+='\n'+'\documentclass[a4paper,10pt]{article}'
     head+='\n'+'\\usepackage{ucs}'
@@ -1103,7 +1118,7 @@ for curso in dic_cursos:
 
     head+='\n'+'\section{INTRODUÇÃO}'    
     head+='\n'+'Este relatório objetiva apresentar os resultados da avaliação de disciplinas do Curso \
-    de '+nome_curso+' da Universidade Federal de Juiz de Fora, campus '+campus+', realizada pela \
+    de '+nome_curso+' da Universidade Federal de Juiz de Fora, código e-MEC '+str(cod_emec)+', realizada pela \
     Diretoria de Avaliação Institucional e os encaminhamentos propostos a \
     partir destes resultados.'    
     
@@ -1111,11 +1126,11 @@ for curso in dic_cursos:
     head+='\n'+'\\begin{center}'
     head+='\n'+'\\begin{tabularx}{\linewidth}{r|X}'
     head+='\n'+'\nPúblico-alvo:& Curso de '+nome_curso+'\\\\'
-    head+='\n'+'\nCampus:& '+campus+'\\\\'
+    #head+='\n'+'\nCampus:& '+campus+'\\\\'
     head+='\n'+'\nPeríodo de coleta de dados:& '+str(ano)+'/'+str(periodo)+'.'+'\\\\'
     head+='\n'+'\nForma de aplicação:& Online, por meio do SIGA.'+'\\\\'
     head+='\n'+'\nAlunos respondentes:& '+str(n_alunos_respondentes)+'\\\\'
-    head+='\n'+'\nProfessores respondentes:& '+str(n_prof_respondentes)+'\\\\'
+    #head+='\n'+'\nProfessores respondentes:& '+str(n_prof_respondentes)+'\\\\'
     head+='\n'+'\end{tabularx}'
     head+='\n'+'\end{center}'
     head+='\n'+''    
@@ -1126,8 +1141,8 @@ for curso in dic_cursos:
     coletados através da aplicação de instrumentos de avaliação via SIGA \
     implementados pela Diretoria de Avaliação Institucional (DIAVI) da UFJF, em atendimento \
     ao que estabelece a Lei Sinais e a Resolução Consu 13/2015 (UFJF), \
-    com objetivo de contribuir para a avaliação própria do curso de '+nome_curso+' do Campus '\
-    +campus+'. Foram aplicados um instrumento para discentes e outro para docentes, ambos contendo \
+    com objetivo de contribuir para a avaliação própria do curso de '+nome_curso+' (código e-MEC'\
+    +str(cod_emec)+'). Foram aplicados um instrumento para discentes e outro para docentes, ambos contendo \
     15 questões versando sobre as disciplinas na modalidade presencial oferecidas pela UFJF no \
     referido período, visando, especificamente, coletar impressões sobre: atuação docente, atuação discente, \
     recursos empregados, qualidade da disciplina ministrada. \
@@ -1183,57 +1198,57 @@ for curso in dic_cursos:
     head+='\n'+''    
     head+='\n'+'\\begin{figure}[h]'
     head+='\n'+'\centering'
-    head+='\n'+'\includegraphics[width=0.85\linewidth]{resposta_questoes_curso_'+curso+'}'
+    head+='\n'+'\includegraphics[width=0.85\linewidth]{resposta_questoes_curso_'+str(cod_emec)+'}'
     head+='\n'+'\caption{\label{fig:qalunos}Distribuição das resposta dos discentes para as questões apresentadas}'
     head+='\n'+'\end{figure}'
 
-    if n_prof_respondentes>0:
-    
-        head+='\n'+''
-        head+='\n'+'\\begin{figure}[h]'
-        head+='\n'+'\centering'
-        head+='\n'+'\includegraphics[width=0.85\linewidth]{resposta_questoes_curso_'+curso+'_docentes}'
-        head+='\n'+'\caption{\label{fig:qdocentes}Distribuição das respostas dos docentes}'
-        head+='\n'+'\end{figure}'
-    
-        head+='\n'+''
-        head+='\n'+'\\begin{figure}[h]'
-        head+='\n'+'\centering'
-        head+='\n'+'\includegraphics[width=0.8\linewidth]{comparacao_hori_resposta_curso_'+curso+'}'
-        head+='\n'+'\caption{\label{fig:comp}Compararação das respostas dos docentes e alunos}'
-        head+='\n'+'\end{figure}'
-        head+='\n'+''
+#    if n_prof_respondentes>0:
+#    
+#        head+='\n'+''
+#        head+='\n'+'\\begin{figure}[h]'
+#        head+='\n'+'\centering'
+#        head+='\n'+'\includegraphics[width=0.85\linewidth]{resposta_questoes_curso_'+curso+'_docentes}'
+#        head+='\n'+'\caption{\label{fig:qdocentes}Distribuição das respostas dos docentes}'
+#        head+='\n'+'\end{figure}'
+#    
+#        head+='\n'+''
+#        head+='\n'+'\\begin{figure}[h]'
+#        head+='\n'+'\centering'
+#        head+='\n'+'\includegraphics[width=0.8\linewidth]{comparacao_hori_resposta_curso_'+curso+'}'
+#        head+='\n'+'\caption{\label{fig:comp}Compararação das respostas dos docentes e alunos}'
+#        head+='\n'+'\end{figure}'
+#        head+='\n'+''
     
     if n_alunos_respondentes>0:
     
         head+='\n'+'\\begin{figure}[h]'
         head+='\n'+'\centering'
-        head+='\n'+'\includegraphics[width=0.7\linewidth]{ingresso_discentes_curso_ano_'+curso+'}'
+        head+='\n'+'\includegraphics[width=0.7\linewidth]{ingresso_discentes_curso_ano_'+str(cod_emec)+'}'
         head+='\n'+'\caption{\label{fig:ingressoano} Perfil  dos alunos respondentes em função do tipo de ingresso.}'
         head+='\n'+'\end{figure}'
         head+='\n'+''
         head+='\n'+'\\begin{figure}[h]'
         head+='\n'+'\centering'
-        head+='\n'+'\includegraphics[width=0.99\linewidth]{ingresso_discentes_curso_tipo_'+curso+'}'
+        head+='\n'+'\includegraphics[width=0.99\linewidth]{ingresso_discentes_curso_tipo_'+str(cod_emec)+'}'
         head+='\n'+'\caption{\label{fig:ingressoano} Perfil  dos alunos respondentes  em função do ano de ingresso.}'
         head+='\n'+'\end{figure}'
         head+='\n'+''
         head+='\n'+'\\begin{figure}[h]'
         head+='\n'+'\centering'
-        head+='\n'+'\includegraphics[width=0.99\linewidth]{quantitativos_estado_de_origem_'+curso+'}'
+        head+='\n'+'\includegraphics[width=0.99\linewidth]{quantitativos_estado_de_origem_'+str(cod_emec)+'}'
         head+='\n'+'\caption{\label{fig:estadoano} Estado de origem dos alunos respondentes em função do ano de ingresso.}'
         head+='\n'+'\end{figure}'
         head+='\n'+''
         head+='\n'+'\\begin{figure}[h]'
         head+='\n'+'\centering'
-        head+='\n'+'\includegraphics[width=0.99\linewidth]{quantitativos_bolsa_de_apoio_'+curso+'}'
+        head+='\n'+'\includegraphics[width=0.99\linewidth]{quantitativos_bolsa_de_apoio_'+str(cod_emec)+'}'
         head+='\n'+'\caption{\label{fig:bolsaano} Bolsas de apoio para os alunos respondentes em função do ano de ingresso.}'
         head+='\n'+'\end{figure}'
 
 
     head+='\n\n'+'\end{document}'
 
-    fbase='relatorio_'+str(ano)+'_'+str(periodo)+'_'+curso
+    fbase='relatorio_'+str(ano)+'_'+str(periodo)+'_codigo_emec_'+str(cod_emec)
     ftex=fbase+'.tex'
     fpdf=fbase+'.pdf'
     with open(ftex, 'w') as f:  
