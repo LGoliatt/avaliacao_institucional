@@ -71,7 +71,7 @@ X=X.reindex()
 Y=Y.reindex()
 
 
-W = pd.concat([X,Y], sort=False)
+#W = pd.concat([X,Y], sort=False)
 
 #%%
 
@@ -334,7 +334,7 @@ lista_dep = X['Departamento'].dropna().unique(); lista_dep.sort()
 #%% 
 tab=[]
 info_aluno=[]
-for i, df in X.groupby(['Curso Aluno']):
+for i, df in X.groupby(['Código e-MEC']):
     n= df['Aluno'].unique().shape[0]
     aluno=[]
     for j, df1 in df.groupby('Aluno'):
@@ -389,7 +389,7 @@ print(X['Tipos Bolsa'].unique())
 
 #sns.set()
 n_colors=info_aluno['Ano Ingresso'].unique().shape[0]
-sns.set_palette("RdBu", n_colors=n_colors,)  
+#sns.set_palette("RdBu", n_colors=n_colors,)  
 ct=pd.crosstab(info_aluno['Curso'], info_aluno['Ano Ingresso']); 
 ct = ct.T/ct.sum(axis=1).values
 g = ct.T.plot.bar(stacked=True, )
@@ -472,10 +472,11 @@ tab_docentes['Cursos']=[i for i in tab_docentes['Curso']]
 
 
 pl.figure()
-g=sns.catplot(x='Cursos', y='NA', data=tab_docentes, kind='bar',palette='Greens_d',
-               aspect=2, order=tab_docentes['Cursos'])
+g=sns.catplot(x='Cursos', y='NA', data=tab_docentes, kind='bar',#palette='Greens_d',
+               aspect=1, order=tab_docentes['Cursos'])
 g.set_xticklabels(rotation=90)
-g.set_xlabels('Curso (sigla)')
+#g.set_xlabels('Curso (sigla)')
+g.set_xlabels('')
 g.set_ylabels(u'Número de docentes participantes')
 for p in g.ax.patches:
         g.ax.annotate("%d" % p.get_height(), (p.get_x() + p.get_width(), p.get_height()),
@@ -788,7 +789,7 @@ for d, df in A.groupby(['Código e-MEC']):
     print(d)
     #df=df[df['Resposta']!='NA']
     n_colors=df['Questao'].unique().shape[0]
-    sns.set_palette("Set1", n_colors=n_colors,)   
+    #sns.set_palette("Set2", n_colors=n_colors,)   
 
     pl.figure()
     ct = pd.crosstab(df['Questao'], df['Resposta'].astype('str'))
@@ -798,10 +799,18 @@ for d, df in A.groupby(['Código e-MEC']):
     g.set_ylim([0,1])
     g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
     g.set_ylabel(u'Porcentagem de questões respondidas')
+    g.set_xlabel(u'')
     #g.set_title(dic_cursos[d])
-    g.set_title(d)
+    g.set_title(df['Curso Nome'].unique()[0])
     pl.savefig('resposta_questoes_curso_'+str(d)+'.png', dpi=300,bbox_inches='tight')
-    #pl.show()
+    pl.show()
+    
+    #disciplinas_curso = df['Disciplina'].unique()
+    #l=[ disciplinas_curso[i] in B['Disciplina'] for i in range(len(disciplinas_curso)) ]
+
+    #professor_curso = df['Professor'].unique()
+    #l=[ professor_curso[i] in B['Professor'] for i in range(len(professor_curso)) ]
+    #print(l)
     
 #%%
 #for d, df in B.groupby(['Curso']):
@@ -891,7 +900,6 @@ for d, df in A.groupby(['Questao']):
 #    #pl.show()
     
 #%%
-
 for d, df in A.groupby(['Questao']):
     print(d)
     pl.figure()
@@ -979,19 +987,43 @@ mask[np.triu_indices_from(mask)] = True
 
 # Set up the matplotlib figure
 
-f, ax = pl.subplots(figsize=(12, 12))
+f, ax = pl.subplots(figsize=(16, 16))
 
 # Generate a custom diverging colormap
 cmap = sns.diverging_palette(220, 10, as_cmap=True)
 
 # Draw the heatmap with the mask and correct aspect ratio
-pl.figure(figsize=(12, 12))
+pl.figure(figsize=(16, 16))
 sns.heatmap(corr, mask=mask, cmap=cmap, #vmin=.0, vmax=1., 
             center=0, square=True, linewidths=.5, annot=True, cbar_kws={"shrink": .8})
 
 pl.title(u"Correlação entre as questões (alunos)")
 pl.savefig('matriz_corr.png', dpi=300,bbox_inches='tight')
 #pl.show()
+#%%
+for d, df in A.groupby(['Curso Nome']):
+    print(d)
+    
+    corr = df[questoes].corr()
+    mask = np.zeros_like(corr, dtype=np.bool)
+    mask[np.triu_indices_from(mask)] = True
+    corr=np.round(corr, decimals=2)
+    # Set up the matplotlib figure
+    
+    #f, ax = pl.subplots(figsize=(15, 15))
+    
+    # Generate a custom diverging colormap
+    cmap = sns.diverging_palette(220, 10, as_cmap=True)
+    
+    # Draw the heatmap with the mask and correct aspect ratio
+    pl.figure(figsize=(16, 16))
+    sns.heatmap(corr, mask=mask, cmap=cmap, #vmin=.0, vmax=1., 
+                center=0, square=True, linewidths=.5, annot=True, cbar_kws={"shrink": .8})
+    
+    pl.title(u"Correlação entre as questões (alunos)\n"+d)
+    emec=df['Código e-MEC'].unique()[0]
+    pl.savefig('matriz_corr__'+str(emec)+'.png', dpi=300,bbox_inches='tight')
+    pl.show()
 #%%
 corr = Y[questoes_docentes].corr()
 mask = np.zeros_like(corr, dtype=np.bool)
