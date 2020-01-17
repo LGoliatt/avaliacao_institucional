@@ -1018,7 +1018,10 @@ for d, df in A.groupby(['Curso Nome']):
     # Draw the heatmap with the mask and correct aspect ratio
     pl.figure(figsize=(16, 16))
     sns.heatmap(corr, mask=mask, cmap=cmap, #vmin=.0, vmax=1., 
-                center=0, square=True, linewidths=.5, annot=True, cbar_kws={"shrink": .8})
+                center=0, square=True, linewidths=.5, 
+                annot=True, 
+                cbar_kws={"shrink": .7}
+                )
     
     pl.title(u"Correlação entre as questões (alunos)\n"+d)
     emec=df['Código e-MEC'].unique()[0]
@@ -1231,7 +1234,14 @@ for cod_emec, df1 in X.groupby(['Código e-MEC']):
     head+='\n'+'\\begin{figure}[h]'
     head+='\n'+'\centering'
     head+='\n'+'\includegraphics[width=0.85\linewidth]{resposta_questoes_curso_'+str(cod_emec)+'}'
-    head+='\n'+'\caption{\label{fig:qalunos}Distribuição das resposta dos discentes para as questões apresentadas}'
+    head+='\n'+'\caption{\label{fig:qalunos}Distribuição das respostas dos discentes para as questões apresentadas}'
+    head+='\n'+'\end{figure}'
+
+    head+='\n'+''    
+    head+='\n'+'\\begin{figure}[h]'
+    head+='\n'+'\centering'
+    head+='\n'+'\includegraphics[width=0.999\linewidth]{matriz_corr__'+str(cod_emec)+'}'
+    head+='\n'+'\caption{\label{fig:corr_alunos}Correlação das respostas dos discentes para as questões apresentadas}'
     head+='\n'+'\end{figure}'
 
 #    if n_prof_respondentes>0:
