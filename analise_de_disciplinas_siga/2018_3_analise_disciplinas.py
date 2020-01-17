@@ -71,6 +71,9 @@ Y=Y.reindex()
 
 #%%
 
+
+#%%
+
 #lista_cursos=['77A', '65A', '34A', '04A', '23A', '65B', '65D','15A', '64A', 
 #                                                     '08GV', '87A']
 #lista_cursos=[u'08GV', u'63E', u'88A', '73BL', '63B', '71A']
@@ -175,6 +178,7 @@ Y = pd.concat([C,Q], axis=1)
 Z=[]
 for c,df in Y.groupby(['Cursos']):
     aux=df.copy()
+    print(c)
     for i in c.split('|'):
         aux['Cursos']=i
         Z.append(aux)

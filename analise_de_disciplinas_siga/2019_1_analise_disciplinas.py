@@ -45,9 +45,10 @@ sns.set_context("paper", font_scale=1.2,
 path='./data/'
 
 csv={
-     'Docentes'     :'./data/2019_1_analise_disciplinas_ead_discentes.csv',
-     'Discentes'    :'./data/2019_1_analise_disciplinas_ead_docentes.csv',
-     
+     #'Docentes'     :'./data/2019_1_analise_disciplinas_ead_discentes.csv',
+     #'Discentes'    :'./data/2019_1_analise_disciplinas_ead_docentes.csv',
+     'Docentes'     :'./data/RelatorioRespostasDocente_2019_1.csv',
+     'Discentes'    :'./data/RelatorioRespostasAluno_2019_1.csv',     
 }
 
 filelist=glob.glob(path+'*.csv')
@@ -72,6 +73,20 @@ Y=Y.reindex()
 
 
 #W = pd.concat([X,Y], sort=False)
+
+#%%
+
+print('-'*80+'\n'+'Lista dos professores que responderam os questionarios e que também \nforam avaliados pelo alunos'+
+      '\n'+'-'*80)
+
+for p in Y['Professor'].unique():
+    print(p, end=' -- ')
+    if p in X['Professor'].unique():
+        aux=X[X['Professor']==p]
+        c_ = '|'.join(aux['Curso Aluno'].unique())
+        print(c_, end='\n')        
+    else:
+        print(None)
 
 #%%
 
