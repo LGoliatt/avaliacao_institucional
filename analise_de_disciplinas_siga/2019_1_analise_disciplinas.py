@@ -561,7 +561,7 @@ tab_participantes = pd.concat([tab, tab_docentes])
 
 pl.figure()
 g=sns.catplot(x='Cursos', y='NA', data=tab_participantes, kind='bar', 
-              hue='Participante',
+              hue='Participante',legend=False,
               #palette='Blues_d',
               aspect=2, order=tab['Cursos'])
 g.set_xticklabels(rotation=90)
@@ -877,7 +877,7 @@ for d, df in A.groupby(['Código e-MEC']):
 #    #pl.show()
     
 #%%
-for d, df in A.groupby(['Departamento']):
+for d, df in A.groupby(['Departamento']): 
     print(d)
     #df=df[df['Resposta']!='NA']
     n_colors=df['Questao'].unique().shape[0]
