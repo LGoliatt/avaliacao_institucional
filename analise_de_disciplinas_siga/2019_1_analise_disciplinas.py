@@ -79,14 +79,18 @@ Y=Y.reindex()
 print('-'*80+'\n'+'Lista dos professores que responderam os questionarios e que também \nforam avaliados pelo alunos'+
       '\n'+'-'*80)
 
+dic_prof={}
 for p in Y['Professor'].unique():
     print(p, end=' -- ')
     if p in X['Professor'].unique():
         aux=X[X['Professor']==p]
         c_ = '|'.join(aux['Curso Aluno'].unique())
-        print(c_, end='\n')        
+        print(c_, end='\n')
+        dic_prof[p]=c_
     else:
         print(None)
+        dic_prof[p]=None
+Y['Cursos'] = [ dic_prof[p] for p in Y['Professor'] ]
 
 #%%
 
@@ -480,14 +484,15 @@ for i, df in X.groupby(['Curso Nome']):
     n= df['Professor'].unique().shape[0]
     print (i,'\t',len(df)/n)
     tab_docentes.append({'NA':n, 'NF':len(df),
-                'Curso':i})   
+                         'Participante':'Docente',
+                         'Curso':i})   
     
 tab_docentes=pd.DataFrame(tab_docentes)
 tab_docentes['Cursos']=[i for i in tab_docentes['Curso']]
 
 
 pl.figure()
-g=sns.catplot(x='Cursos', y='NA', data=tab_docentes, kind='bar',#palette='Greens_d',
+g=sns.catplot(x='Cursos', y='NA', data=tab_docentes, kind='bar',palette='Greens_d',
                aspect=1, order=tab_docentes['Cursos'])
 g.set_xticklabels(rotation=90)
 #g.set_xlabels('Curso (sigla)')
@@ -508,14 +513,17 @@ for i, df in X.groupby(['Curso Nome']):
     n= df['Aluno'].unique().shape[0]
     print (i,'\t',len(df)/n)
     tab.append({'NA':n, 'NF':len(df),
-                'MRA':len(df)/(1.0*n),
+                'Participante':'Aluno',
+                #'MRA':len(df)/(1.0*n),
                 'Curso':i})   
     
 tab=pd.DataFrame(tab)
 tab.to_csv('tabela_informacoes_2'+'.csv')
 tab['Cursos']=[i for i in tab['Curso']]
+
+
 pl.figure()
-g=sns.catplot(x='Cursos', y='NA', data=tab, kind='bar',palette='Blues_d',
+g=sns.catplot(x='Cursos', y='NA', data=tab, kind='bar', palette='Blues_d',
                aspect=2, order=tab['Cursos'])
 g.set_xticklabels(rotation=90)
 g.set_xlabels('')#'Curso (sigla)')
@@ -547,6 +555,24 @@ g.set_xlabel(u'Número de participantes por disciplina')
 g.set_ylabel(u'Ocorrência')
 g.set_xlim([1,ct.sum().max()])
 pl.savefig('numero_participantes_disciplina_histograma.png', dpi=300,bbox_inches='tight')
+
+#%%
+tab_participantes = pd.concat([tab, tab_docentes])
+
+pl.figure()
+g=sns.catplot(x='Cursos', y='NA', data=tab_participantes, kind='bar', 
+              hue='Participante',
+              #palette='Blues_d',
+              aspect=2, order=tab['Cursos'])
+g.set_xticklabels(rotation=90)
+g.set_xlabels('')#'Curso (sigla)')
+g.set_ylabels(u'Número de participantes')
+pl.legend(loc='upper right', fontsize=16)
+for p in g.ax.patches:
+        g.ax.annotate("%d" % p.get_height(), (p.get_x() + p.get_width(), p.get_height()),
+             ha='right', va='center', rotation=90, xytext=(0, 20), textcoords='offset points')  #vertical bars
+
+g.savefig('numero_participantes_curso.png', dpi=300,bbox_inches='tight')
 
 #%%
 
