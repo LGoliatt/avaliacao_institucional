@@ -72,11 +72,15 @@ X=X.reindex()
 Y=Y.reindex()
 
 
+#X[u'Período']=X['Período']
+#Y[u'Período']=Y['Perï¿½odo']
+#Y.drop(['Perï¿½odo'], axis=1, inplace=True)
+
 #W = pd.concat([X,Y], sort=False)
 
 #%%
 
-print('-'*80+'\n'+'Lista dos professores que responderam os questionarios e que também \nforam avaliados pelo alunos'+
+print('-'*80+'\n'+'Lista dos professores que responderam os questionarios e também \nforam avaliados pelo alunos'+
       '\n'+'-'*80)
 
 dic_prof={}
@@ -90,8 +94,8 @@ for p in Y['Professor'].unique():
     else:
         print(None)
         dic_prof[p]=None
-Y['Cursos'] = [ dic_prof[p] for p in Y['Professor'] ]
 
+Y['Cursos'] = [ dic_prof[p] for p in Y['Professor'] ]
 #%%
 
 #lista_cursos=['77A', '65A', '34A', '04A', '23A', '65B', '65D','15A', '64A', 
@@ -170,7 +174,7 @@ X['Ano Ingresso'] = [int(i) for i in X['Ano Ingresso'].values ]
 
 aux=[]
 for i in lista_cursos:
-    print(i)
+    #print(i)
     aux.append(X[X['Curso Aluno']==i])
 
 X=pd.concat(aux)    
@@ -261,12 +265,19 @@ dic={}
 for i in range(len(dataframe_departamentos)): 
     d, s = dataframe_departamentos.iloc[i]['Nome'], dataframe_departamentos.iloc[i]['Sigla']
     dic[d]=s
-    
+
+#%%    
 dep_list=[]    
 for i in X['Departamento']:
     dep_list.append(dic[i])
 
 X['Departamento'] = dep_list   
+#%%
+dep_list=[]    
+for i in Y['Departamento']:
+    dep_list.append(dic[i])
+
+Y['Departamento'] = dep_list   
 
 #%% 
 #dep_list=[]    
@@ -649,6 +660,9 @@ for i in range(len(X)):
 A = pd.DataFrame(A)
 lista_dep = A['Departamento'].dropna().unique(); lista_dep.sort()
 
+#A['Questao (Alunos)']=A['Questao']
+#A['Questão (Alunos)']=A['Questao']
+
 #%%    
 
 B = []    
@@ -664,7 +678,9 @@ for i in range(len(Y)):
         B.append(dic)
     
 B = pd.DataFrame(B)
-B['Questao (Docentes)']=B['Questao']
+#B['Questao (Docentes)']=B['Questao']
+#B['Questão (Docentes)']=B['Questao']
+
 #A.dropna(inplace=True)
 #A['Cursos Atendidos'] = [len(i.split('|')) for i in A['Cursos']]
 
@@ -675,6 +691,13 @@ B['Questao (Docentes)']=B['Questao']
 #    aux_2.append(nomes_cursos[i])
 #A['Curso Discente'] = aux_2
 lista_dep = B['Departamento'].dropna().unique(); lista_dep.sort()
+#%%    
+#
+# Ajuste da escala Likert
+#
+max_likert = 5
+colnames=[str(i) for i in range(max_likert+1)]
+
 #%%    
 
 #fn1 = path+'departamentos_nomes_siglas.csv'
@@ -705,6 +728,7 @@ sns.set_palette("Set1", 15, .99)
 pl.figure()
 ct = pd.crosstab(A['Curso Nome'], A['Ano Ingresso'].astype('str'))
 ct = ct.T/ct.sum(axis=1).values
+
 g = ct.T.plot.bar(stacked=True, )
 g.set_ylim([0,1])
 g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
@@ -794,6 +818,13 @@ pl.figure()
 ct = pd.crosstab(A['Questao'], A['Resposta'].astype('str'))
 #ct.drop(['NA'], axis=1, inplace=True)
 ct = ct/(ct.sum(axis=1).mean())
+#
+for i in colnames:
+    if not i in ct.columns:
+        ct[i]=0
+        
+ct=ct[np.sort(ct.columns)]
+#
 g = ct.plot.bar(stacked=True)
 g.set_ylim([0,1])
 g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
@@ -805,17 +836,22 @@ pl.savefig('resposta_questoes_geral.png', dpi=300,bbox_inches='tight')
     
 #%%
 #sns.set()
-n_colors=B['Questao (Docentes)'].unique().shape[0]
-sns.set_palette("Set1", n_colors=n_colors,)   
-
+ 
 pl.figure()
-ct = pd.crosstab(B['Questao (Docentes)'], B['Resposta'].astype('str'))
+ct = pd.crosstab(B['Questao'], B['Resposta'].astype('str'))
 #try:
 #    ct.drop(['NA'], axis=1, inplace=True)
 #except:
 #    pass
 ct = ct/(ct.sum(axis=1).mean())
 g = ct.plot.bar(stacked=True)
+#
+for i in colnames:
+    if not i in ct.columns:
+        ct[i]=0
+        
+ct=ct[np.sort(ct.columns)]
+#
 g.set_ylim([0,1])
 g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
 #g.set_title(u'Total de Questões respondidas')
@@ -835,11 +871,18 @@ for d, df in A.groupby(['Código e-MEC']):
     pl.figure()
     ct = pd.crosstab(df['Questao'], df['Resposta'].astype('str'))
     ct = ct/(ct.sum(axis=1).mean())
+    #
+    for i in colnames:
+        if not i in ct.columns:
+            ct[i]=0
+            
+    ct=ct[np.sort(ct.columns)]
+    #
     g = ct.plot.bar(stacked=True)
     g.legend(title='Escala\nLikert', loc='center left', bbox_to_anchor=(1.0, 0.5))
     g.set_ylim([0,1])
     g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
-    g.set_ylabel(u'Porcentagem de questões respondidas')
+    g.set_ylabel(u'Porcentagem de questões respondidas\n pelos alunos')
     g.set_xlabel(u'')
     #g.set_title(dic_cursos[d])
     g.set_title(df['Curso Nome'].unique()[0])
@@ -877,23 +920,121 @@ for d, df in A.groupby(['Código e-MEC']):
 #    #pl.show()
     
 #%%
+##
+## Análise por departamento
+##    
 for d, df in A.groupby(['Departamento']): 
     print(d)
+    n_participantes =str(len(df['Aluno'].unique()))
+    n_disciplinas =str(len(df['Disciplina'].unique()))
+    periodo=str(df['Ano'].unique()[0])+'-'+str(df['Período'].unique()[0])
     #df=df[df['Resposta']!='NA']
-    n_colors=df['Questao'].unique().shape[0]
+    q='Questao'
+    n_colors=df[q].unique().shape[0]
     sns.set_palette("Set1", n_colors=n_colors,)   
 
     pl.figure()
-    ct = pd.crosstab(df['Questao'], df['Resposta'].astype('str'))
+    ct = pd.crosstab(df[q], df['Resposta'].astype('str'))
     ct = ct/(ct.sum(axis=1).mean())
+    #
+    for i in colnames:
+        if not i in ct.columns:
+            ct[i]=0
+            
+    ct=ct[np.sort(ct.columns)]
+    #
     g = ct.plot.bar(stacked=True)
     g.legend(title='Escala\nLikert', loc='center left', bbox_to_anchor=(1.0, 0.5))
-    g.set_title(d)
+    tit=d+' ('+periodo+')\n'+n_participantes+' alunos participantes'+'\n'+n_disciplinas+' disciplinas avaliadas'
+    g.set_title(tit)
     g.set_ylim([0,1])
     g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
-    g.set_ylabel(u'Porcentagem de questões respondidas\npelos alunos')
-    pl.savefig('resposta_questoes_departamento_'+d+'.png', dpi=300,bbox_inches='tight')
-    #pl.show()
+    g.set_ylabel(u'Porcentagem de questões respondidas\npelos {\\bf ALUNOS}')
+    #g.set_xlabel(u'Questão')
+    pl.savefig('analise_geral_departamento_'+d+'_alunos.png', dpi=300,bbox_inches='tight')
+    pl.show()
+   
+    for d1, df1 in df.groupby(['Disciplina']):
+        n_participantes_disciplina =str(len(df1['Aluno'].unique()))
+        pl.figure()
+        ct = pd.crosstab(df[q], df1['Resposta'].astype('str'))
+        ct = ct/(ct.sum(axis=1).mean())
+        #
+        for i in colnames:
+            if not i in ct.columns:
+                ct[i]=0
+                
+        ct=ct[np.sort(ct.columns)]
+        #
+        g = ct.plot.bar(stacked=True)
+        g.legend(title='Escala\nLikert', loc='center left', bbox_to_anchor=(1.0, 0.5))
+        tit='Departamento: '+d+'\n'+'Disciplina '+d1+' -- ('+periodo+')'+'\n'+n_participantes_disciplina+' alunos responderam o questionário'
+        g.set_title(tit)
+        g.set_ylim([0,1])
+        g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
+        g.set_ylabel(u'Porcentagem de questões respondidas\npelos {\\bf ALUNOS}')
+        g.set_xlabel(u'Questão (Alunos)')
+        pl.savefig('analise_disciplina_departamento_'+d+'_disciplina_'+d1+'_alunos.png', dpi=300,bbox_inches='tight')
+        pl.show()
+     
+        
+#%%    
+for d, df in B.groupby(['Departamento']): 
+    print(d)
+    n_participantes =str(len(df['Professor'].unique()))
+    n_disciplinas =str(len(df['Disciplina'].unique()))
+    periodo=str(df['Ano'].unique()[0])+'-'+str(df['Período'].unique()[0])
+    
+    #df=df[df['Resposta']!='NA']
+    q='Questao'
+    n_colors=df[q].unique().shape[0]
+    sns.set_palette("Set1", n_colors=n_colors,)   
+
+    pl.figure()
+    ct = pd.crosstab(df[q], df['Resposta'].astype('str'))
+    ct = ct/(ct.sum(axis=1).mean())
+    #
+    for i in colnames:
+        if not i in ct.columns:
+            ct[i]=0
+            
+    ct=ct[np.sort(ct.columns)]
+    #
+    g = ct.plot.bar(stacked=True)
+    g.legend(title='Escala\nLikert', loc='center left', 
+             bbox_to_anchor=(1.0, 0.5),
+             )
+    tit=d+' ('+periodo+')\n'+n_participantes+' docentes participantes'+'\n'+n_disciplinas+' disciplinas avaliadas'
+    g.set_title(tit)
+    g.set_ylim([0,1])
+    g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
+    g.set_ylabel(u'Porcentagem de questões respondidas\npelos {\\bf DOCENTES}')
+    #g.set_xlabel(u'Questão')
+    pl.savefig('analise_geral_departamento_'+d+'_docentes.png', dpi=300,bbox_inches='tight')
+    pl.show()
+    
+    for d1, df1 in df.groupby(['Disciplina']):
+        n_participantes_disciplina =str(len(df1['Professor'].unique()))
+        pl.figure()
+        ct = pd.crosstab(df[q], df1['Resposta'].astype('str'))
+        ct = ct/(ct.sum(axis=1).mean())
+        #
+        for i in colnames:
+            if not i in ct.columns:
+                ct[i]=0
+                
+        ct=ct[np.sort(ct.columns)]
+        #
+        g = ct.plot.bar(stacked=True)
+        g.legend(title='Escala\nLikert', loc='center left', bbox_to_anchor=(1.0, 0.5))
+        tit='Departamento: '+d+'\n'+'Disciplina '+d1+' -- ('+periodo+')'+'\n'+n_participantes_disciplina+' docentes responderam o questionário'
+        g.set_title(tit)
+        g.set_ylim([0,1])
+        g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
+        g.set_ylabel(u'Porcentagem de questões respondidas\npelos {\\bf DOCENTES}')
+        g.set_xlabel(u'Questão (Docentes)')
+        pl.savefig('analise_disciplina_departamento_'+d+'_disciplina_'+d1+'_docentes.png', dpi=300,bbox_inches='tight')
+        pl.show()
     
 #%%
 for d, df in A.groupby(['Questao']):
@@ -915,9 +1056,9 @@ for d, df in A.groupby(['Questao']):
     g.set_yticklabels(['{:.0f}%'.format(x*1) for x in g.get_yticks()]) 
     g.set_ylabel(u'Porcentagem de questões respondidas\npelos alunos')
     pl.savefig('resposta_departamento_questao_'+d+'.png', dpi=300,bbox_inches='tight')
-    #pl.show()
+    pl.show()
     
-##%%
+#%%
 #for d, df in B.groupby(['Questao (Docentes)']):
 #    print(d)
 #    try:
@@ -950,6 +1091,13 @@ for d, df in A.groupby(['Questao']):
     for i in range(len(ct)):
         ct.iloc[i] = ct.iloc[i]/ct.iloc[i].sum()
         
+    #
+    for i in colnames:
+        if not i in ct.columns:
+            ct[i]=0
+            
+    ct=ct[np.sort(ct.columns)]
+    #
     g = ct.plot.bar(stacked=True)
     g.legend(title='Escala\nLikert', loc='center left', bbox_to_anchor=(1.0, 0.5))
     g.set_title(d)
@@ -958,7 +1106,7 @@ for d, df in A.groupby(['Questao']):
     #g.set_aspect(aspect=0.2,)
     g.set_ylabel(u'Porcentagem de questões respondidas\npelos alunos')
     pl.savefig('resposta_curso_questao_'+d+'.png', dpi=300,bbox_inches='tight')
-    #pl.show()
+    pl.show()
 
 #%%
 #sns.set()
@@ -1031,11 +1179,11 @@ mask[np.triu_indices_from(mask)] = True
 f, ax = pl.subplots(figsize=(16, 16))
 
 # Generate a custom diverging colormap
-cmap = sns.diverging_palette(220, 10, as_cmap=True)
+#cmap = sns.diverging_palette(220, 10, as_cmap=True)
 
 # Draw the heatmap with the mask and correct aspect ratio
 pl.figure(figsize=(16, 16))
-sns.heatmap(corr, mask=mask, cmap=cmap, #vmin=.0, vmax=1., 
+sns.heatmap(corr, mask=mask, #cmap=cmap, #vmin=.0, vmax=1., 
             center=0, square=True, linewidths=.5, annot=True, cbar_kws={"shrink": .8})
 
 pl.title(u"Correlação entre as questões (alunos)")
@@ -1054,11 +1202,11 @@ for d, df in A.groupby(['Curso Nome']):
     #f, ax = pl.subplots(figsize=(15, 15))
     
     # Generate a custom diverging colormap
-    cmap = sns.diverging_palette(220, 10, as_cmap=True)
+    #cmap = sns.diverging_palette(220, 10, as_cmap=True)
     
     # Draw the heatmap with the mask and correct aspect ratio
     pl.figure(figsize=(16, 16))
-    sns.heatmap(corr, mask=mask, cmap=cmap, #vmin=.0, vmax=1., 
+    sns.heatmap(corr, mask=mask, #cmap=cmap, #vmin=.0, vmax=1., 
                 center=0, square=True, linewidths=.5, 
                 annot=True, 
                 cbar_kws={"shrink": .7}
@@ -1074,20 +1222,23 @@ mask = np.zeros_like(corr, dtype=np.bool)
 mask[np.triu_indices_from(mask)] = True
 
 f, ax = pl.subplots(figsize=(12, 12))
-cmap = sns.diverging_palette(220, 10, as_cmap=True)
+#cmap = sns.diverging_palette(220, 10, as_cmap=True)
 
 # Draw the heatmap with the mask and correct aspect ratio
 pl.figure(figsize=(12, 12))
-sns.heatmap(corr, mask=mask, cmap=cmap, #vmin=.0, vmax=1., 
+sns.heatmap(corr, mask=mask, #cmap=cmap, #vmin=.0, vmax=1., 
             center=0, square=True, linewidths=.5, annot=True, cbar_kws={"shrink": .8})
 
 pl.title(u"Correlação entre as questões (docentes)")
 pl.savefig('matriz_corr_docentes.png', dpi=300,bbox_inches='tight')
 #%%
 A['Cursos']=A['Curso Nome']
-C = pd.concat([A,B],)
-C.drop(['Questao (Docentes)'], inplace=True,axis=1)
 
+A['id_respondente']=A['Aluno']
+B['id_respondente']=A['Professor']
+
+C = pd.concat([A,B],)
+#C.drop(['Questao (Docentes)'], inplace=True,axis=1)
 
 #%%
 #for c, df1 in C.groupby(['Cursos',]):
@@ -1152,12 +1303,10 @@ C.drop(['Questao (Docentes)'], inplace=True,axis=1)
 ##    #pl.show()
 #    
 #%%
-
-    
-
-    
-#%%
-dir_pdf='./relatorios_pdf'
+#
+# Relatórios por curso
+#
+dir_pdf='./relatorios_cursos_pdf'
 os.system('mkdir '+dir_pdf)
 
 for cod_emec, df1 in X.groupby(['Código e-MEC']):
@@ -1270,7 +1419,7 @@ for cod_emec, df1 in X.groupby(['Código e-MEC']):
 
 
     head+='\n'+'\section{RESPOSTAS}'
-    head+='\n'+"As questões podem ser respondidas com um número de 1 a 5 numa escala que vai de {\it Discordo Totalmente} (1) a {\it Concordo Totalmente} (5). Não sendo permitidas múltiplas respostas e sendo possível a alteração antes do envio do formulário. O valor 0 (zero) indicam {\it Não se Aplica}."
+    head+='\n'+"As questões podem ser respondidas com um número de 1 a 5 numa escala que vai de {\it Discordo Totalmente} (1) a {\it Concordo Totalmente} (5). Não sendo permitidas múltiplas respostas e sendo possível a alteração antes do envio do formulário. O valor 0 (zero) indica {\it Não se Aplica}."
     head+='\n'+''    
     head+='\n'+'\\begin{figure}[h]'
     head+='\n'+'\centering'
@@ -1346,7 +1495,252 @@ for cod_emec, df1 in X.groupby(['Código e-MEC']):
     
     
 #%%
+#
+# Relatórios por departamento
+#
+dir_pdf='./relatorios_departamento_pdf'
+os.system('mkdir '+dir_pdf)
+
+fn1 = './aux/'+'departamentos_nomes_siglas.csv'
+dataframe_departamentos= pd.read_csv(fn1, encoding = 'latin-1')
+
+codigos_departamentos={}
+for i in range(len(dataframe_departamentos)): 
+    d, s = dataframe_departamentos.iloc[i]['Nome'], dataframe_departamentos.iloc[i]['Sigla']
+    codigos_departamentos[d]=s
+
+
+for cod_dep, df1 in C.groupby(['Departamento']):
+    ano = df1['Ano'].unique()[0] if len(df1['Ano'].unique())==1 else -1
+    aux=[int(i) for i in df1[u'Período']]
+    df1[u'Período']=aux
+    periodo=df1[u'Período'].unique()
+    #n_prof_respondentes   = 
+    if len(periodo)==1:
+        periodo=periodo[0]
+    else:
+        print('Erro na contagem de perídos para departamento '+cod_dep)
+        break
+
+    n_respondentes = {i:0 for i in C['Tipo Avaliacao'].unique() }
+    n_disciplinas  = {i:0 for i in C['Tipo Avaliacao'].unique() }
+    for tipo_av, df_aux in df1.groupby(['Tipo Avaliacao']):
+        n_respondentes[tipo_av]=df_aux['id_respondente'].unique().shape[0]
+        n_disciplinas[tipo_av]=df_aux['Disciplina'].unique().shape[0]
+
+    print(cod_dep, ano, periodo, n_respondentes['ALUNO_TURMA'], n_respondentes['DOCENTE_TURMA'],
+                                 n_disciplinas['ALUNO_TURMA'], n_disciplinas['DOCENTE_TURMA'])
+    
+    head =''
+    head+='\n'+'\documentclass[a4paper,10pt]{article}'
+    head+='\n'+'\\usepackage{ucs}'
+    head+='\n'+'\\usepackage[utf8]{inputenc}'
+    head+='\n'+'\\usepackage[brazil]{babel}'
+    head+='\n'+'\\usepackage{fontenc}'
+    head+='\n'+'\\usepackage{graphicx,tabularx}'
+    head+='\n'+'\\usepackage[]{hyperref}'
+    head+='\n'+'\sloppy'    
+    head+='\n'+'\date{Data de processamento: \\today}'    
+    
+    head+='\\begin{document}'
+    
+    head+='\n'+'\\author{Diretoria de Avaliação Institucional (DIAVI) \\\\ Universidade Federal de Juiz de Fora}'+'\n'
+    head+='\n'+'\\title{RELATÓRIO DE RESULTADOS DA AVALIAÇÃO DE DEPARTAMENTO\\\\ Código do Departamento: '+cod_dep+'}'
+    head+='\n'+'\maketitle'
+
+    head+='\n'+'\section{INTRODUÇÃO}'    
+    head+='\n'+'Este relatório objetiva apresentar os resultados da avaliação de disciplinas do Departamento \
+    de código '+cod_dep+' da Universidade Federal de Juiz de Fora, realizada pela \
+    Diretoria de Avaliação Institucional e os encaminhamentos propostos a \
+    partir destes resultados.'    
+    
+    head+='\n'+''    
+    head+='\n'+'\\begin{center}'
+    head+='\n'+'\\begin{tabularx}{\linewidth}{r|X}'
+    head+='\n'+'\nPúblico-alvo:& Departamento  '+cod_dep+'\\\\'
+    #head+='\n'+'\nCampus:& '+campus+'\\\\'
+    head+='\n'+'\nPeríodo de coleta de dados:& '+str(ano)+'/'+str(periodo)+'.'+'\\\\'
+    head+='\n'+'\nForma de aplicação:& Online, por meio do SIGA.'+'\\\\'
+    head+='\n'+'\nAlunos   respondentes:& '+str(n_respondentes['ALUNO_TURMA'])+'\\\\'
+    head+='\n'+'\nDocentes respondentes:& '+str(n_respondentes['DOCENTE_TURMA'])+'\\\\'
+    head+='\n'+'\nDisciplinas avaliadas pelos   Alunos:& '+str(n_disciplinas['ALUNO_TURMA'])+'\\\\'
+    head+='\n'+'\nDisciplinas avaliadas pelos Docentes:& '+str(n_disciplinas['DOCENTE_TURMA'])+'\\\\'
+    #head+='\n'+'\nProfessores respondentes:& '+str(n_prof_respondentes)+'\\\\'
+    head+='\n'+'\end{tabularx}'
+    head+='\n'+'\end{center}'
+    head+='\n'+''    
+
+
+    head+='\n'+'\section{MÉTODOS}'    
+    head+='\n'+'Este relatório se refere ao período '+str(ano)+'/'+str(periodo)+', com base em dados \
+    coletados através da aplicação de instrumentos de avaliação via SIGA \
+    implementados pela Diretoria de Avaliação Institucional (DIAVI) da UFJF, em atendimento \
+    ao que estabelece a Lei Sinais e a Resolução Consu 13/2015 (UFJF), \
+    com objetivo de contribuir para a avaliação própria do departamento '+cod_dep+'.\
+    Foram aplicados um instrumento para discentes e outro para docentes, ambos contendo \
+    '+str(C['Questao'].unique().shape[0])+' questões versando sobre as disciplinas na modalidade presencial oferecidas pela UFJF no \
+    referido período, visando, especificamente, coletar impressões sobre: atuação docente, atuação discente, \
+    recursos empregados, qualidade da disciplina ministrada. \
+    As respostas foram colhidas  \
+    com participação espontânea e garantia de\
+    sigilo de participantes e avaliados.'
+
+    
+    head+='\n'+'\section{FORMULÁRIO}'
+    
+    head+='\n'+'As seguintes questões foram {\\bf objeto de avaliação pelos discentes} através do SIGA.'
+    head+='\n'+''
+
+#    P = pd.read_csv('lista_questoes_alunos_formulario.csv', sep=';', 
+#                    header=None, error_bad_lines=False, encoding='latin-1')
+    P = pd.read_csv('lista_questoes_alunos.csv', sep=';', 
+                    header=None, error_bad_lines=False, encoding='latin-1')
+    head+='\n'+'\small{'    
+    head+='\n'+'\\begin{center}'
+    head+='\n'+'\\begin{tabularx}{\linewidth}{l|X}'
+    for i in range(len(P)):
+        a,b = P.iloc[i]
+        c='\\\\\\\\' if i!=len(P)-1 else ''
+        #c='\\\\\\hline' if i!=len(P)-1 else ''
+        head+='\n'+a+'&'+b+c
+    head+='\n'+'\end{tabularx}'
+    head+='\n'+'\end{center}'
+    head+='\n'+'}'    
+        
+  
+        
+    head+='\n'+'As questões abaixo foram {\\bf objeto de avaliação pelos docentes} através do SIGA.'
+    head+='\n'+''
+
+#    P = pd.read_csv('lista_questoes_docentes_formulario.csv', sep=';', 
+#                    header=None, error_bad_lines=False, encoding='latin-1')
+    P = pd.read_csv('lista_questoes_docentes.csv', sep=';', 
+                    header=None, error_bad_lines=False, encoding='latin-1')
+    head+='\n'+'\small{'    
+    head+='\n'+'\\begin{center}'
+    head+='\n'+'\\begin{tabularx}{\linewidth}{c|X}'
+    for i in range(len(P)):
+        a,b = P.iloc[i]
+        c='\\\\\\\\' if i!=len(P)-1 else ''
+        #c='\\\\\\hline' if i!=len(P)-1 else ''
+        head+='\n'+a+'&'+b+c
+    head+='\n'+'\end{tabularx}'
+    head+='\n'+'\end{center}'
+    head+='\n'+'}'
+
+
+    head+='\n'+'\section{RESPOSTAS}'
+    head+='\n'+"As questões podem ser respondidas com um número de 1 a 5 numa escala que vai de {\it Discordo Totalmente} (1) a {\it Concordo Totalmente} (5). Não sendo permitidas múltiplas respostas e sendo possível a alteração antes do envio do formulário. O valor 0 (zero) indica {\it Não se Aplica}."
+    head+='\n'+''    
+
+    head+='\n'+'\subsection{Panorama de todas as disciplinas avaliadas}'
+
+    head+='\n'+'\\begin{figure}[h]'
+    head+='\n'+'\centering'
+    for tipo_av, df_aux in df1.groupby(['Tipo Avaliacao']):
+        print(cod_dep, tipo_av)
+        #n_disciplinas =str(len(df_aux['Disciplina'].unique()))
+        q='Questao'
+        n_colors=df_aux[q].unique().shape[0]
+        sns.set_palette("Set1", n_colors=n_colors,)   
+
+        pl.figure()
+        ct = pd.crosstab(df_aux[q], df_aux['Resposta'].astype('str'))
+        ct = ct/(ct.sum(axis=1).mean())
+        #
+        for i in colnames:
+            if not i in ct.columns:
+                ct[i]=0
+            
+        ct=ct[np.sort(ct.columns)]
+        #
+        g = ct.plot.bar(stacked=True)
+        g.legend(title='Escala\nLikert', loc='center left', 
+                 bbox_to_anchor=(1.0, 0.5),
+                 )
+        tit=cod_dep+' ('+str(ano)+'-'+str(periodo)+')\nParticipantes: '+str(n_respondentes[tipo_av])+' '+'\nDisciplinas avaliadas: '+str(n_disciplinas[tipo_av])+' '
+        g.set_title(tit)
+        g.set_ylim([0,1])
+        g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
+        g.set_ylabel(u'Porcentagem de questões respondidas\npelos {\\bf '+tipo_av.split('_')[0]+'S'+'}')
+        g.set_xlabel(u'Questão')
+        fn='analise_geral_departamento_'+cod_dep+'_'+tipo_av+'.png'
+        pl.savefig(fn, dpi=300,bbox_inches='tight')
+        pl.show()
+        head+='\n'+'\includegraphics[width=0.85\linewidth]{'+fn+'}'
+
+    head+='\n'+'\caption{\label{fig:analise_geral_departamento}\
+            Panorama geral das respostas das disciplinas para as questões apresentadas.}'
+    head+='\n'+'\end{figure}'
+
+ 
+    head+='\n'+'\subsection{Distribuição das respostas para cada disciplina do departamento}'
+    head+='\n'+''    
+    head+='\n'+'Os nomes das disciplinas foram alterados para garantir a segurança da informações de modo que não seja possível a identificação das turmas, dos alunos  e dos professores que responderam a avaliação.'    
+    head+='\n'+''    
+
+    for disc, df2 in df1.groupby(['Disciplina']):        
+        head+='\n'+'\\begin{figure}[h]'
+        head+='\n'+'\centering'
+        for tipo_av, df_aux in df2.groupby(['Tipo Avaliacao']):
+            print(cod_dep, tipo_av)
+            n_disciplinas =str(len(df_aux['Disciplina'].unique()))
+            n_resp = df_aux['id_respondente'].unique().shape[0]
+            q='Questao'
+            n_colors=df_aux[q].unique().shape[0]
+            sns.set_palette("Set1", n_colors=n_colors,)   
+    
+            pl.figure()
+            ct = pd.crosstab(df_aux[q], df_aux['Resposta'].astype('str'))
+            ct = ct/(ct.sum(axis=1).mean())
+            #
+            for i in colnames:
+                if not i in ct.columns:
+                    ct[i]=0
+                
+            ct=ct[np.sort(ct.columns)]
+            #
+            g = ct.plot.bar(stacked=True)
+            g.legend(title='Escala\nLikert', loc='center left', 
+                     bbox_to_anchor=(1.0, 0.5),
+                     )
+            tit='Disciplina '+disc+' ('+str(ano)+'-'+str(periodo)+')'+'\n Departamento: '+cod_dep+'\nRespondentes: '+str(n_resp)+' '
+            g.set_title(tit)
+            g.set_ylim([0,1])
+            g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
+            g.set_ylabel(u'Porcentagem de questões respondidas\npelos {\\bf '+tipo_av.split('_')[0]+'S'+'}')
+            g.set_xlabel(u'Questão')
+            fn='analise_disciplina_departamento_'+cod_dep+'_'+tipo_av+'_'+disc+'.png'
+            pl.savefig(fn, dpi=300,bbox_inches='tight')
+            pl.show()
+            head+='\n'+'\includegraphics[width=0.485\linewidth]{'+fn+'}'
+    
+        head+='\n'+'\caption{\label{fig:analise_geral_departamento}\
+                Distribuição das respostas para a disciplina '+str(disc)+'.}'
+        head+='\n'+'\end{figure}'
+
+
+
+    head+='\n\n'+'\end{document}'
+
+    fbase='relatorio_'+str(ano)+'_'+str(periodo)+'_codigo_departamento_'+str(cod_dep)
+    ftex=fbase+'.tex'
+    fpdf=fbase+'.pdf'
+    with open(ftex, 'w') as f:  
+        f.write(head)  
+
+    f.close()
+
+    os.system('pdflatex '+ftex) 
+    os.system('mv '+fpdf+' '+dir_pdf) 
+    for ext in ['.log', '.aux', '.out',  ]:
+        os.system('mv '+fbase+ext+' /tmp') 
+    
+    
+#%%
 
 #%%
+
+
 
 
