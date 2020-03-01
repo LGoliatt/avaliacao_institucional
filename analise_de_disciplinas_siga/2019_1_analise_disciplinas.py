@@ -1303,195 +1303,195 @@ C = pd.concat([A,B],)
 ##    #pl.show()
 #    
 #%%
+##
+## Relatórios por curso
+##
+#dir_pdf='./relatorios_cursos_pdf'
+#os.system('mkdir '+dir_pdf)
 #
-# Relatórios por curso
+#for cod_emec, df1 in X.groupby(['Código e-MEC']):
+#    nome_curso = df1['Curso Nome'].unique()[0]
+#    ano = df1['Ano'].unique()[0] if len(df1['Ano'].unique())==1 else -1
+#    df1[u'Período']=[int(i) for i in df1[u'Período']]
+#    periodo=df1[u'Período'].unique()
+#    n_alunos_respondentes  = df1.shape[0]
+#    #n_prof_respondentes   = 
+#    if len(periodo)==1:
+#        periodo=periodo[0]
+#    else:
+#        print('Erro na contagem de perídos para o curso '+nome_curso)
+#        break
 #
-dir_pdf='./relatorios_cursos_pdf'
-os.system('mkdir '+dir_pdf)
-
-for cod_emec, df1 in X.groupby(['Código e-MEC']):
-    nome_curso = df1['Curso Nome'].unique()[0]
-    ano = df1['Ano'].unique()[0] if len(df1['Ano'].unique())==1 else -1
-    df1[u'Período']=[int(i) for i in df1[u'Período']]
-    periodo=df1[u'Período'].unique()
-    n_alunos_respondentes  = df1.shape[0]
-    #n_prof_respondentes   = 
-    if len(periodo)==1:
-        periodo=periodo[0]
-    else:
-        print('Erro na contagem de perídos para o curso '+nome_curso)
-        break
-
-    print(cod_emec, nome_curso, ano, periodo, n_alunos_respondentes)
-
-    head =''
-    head+='\n'+'\documentclass[a4paper,10pt]{article}'
-    head+='\n'+'\\usepackage{ucs}'
-    head+='\n'+'\\usepackage[utf8]{inputenc}'
-    head+='\n'+'\\usepackage[brazil]{babel}'
-    head+='\n'+'\\usepackage{fontenc}'
-    head+='\n'+'\\usepackage{graphicx,tabularx}'
-    head+='\n'+'\\usepackage[]{hyperref}'
-    head+='\n'+'\sloppy'    
-    head+='\n'+'\date{Data de processamento: \\today}'    
-    
-    head+='\\begin{document}'
-    
-    head+='\n'+'\\author{Diretoria de Avaliação Institucional (DIAVI) \\\\ Universidade Federal de Juiz de Fora}'+'\n'
-    head+='\n'+'\\title{RELATÓRIO DE RESULTADOS DA AVALIAÇÃO DO CURSO DE '+nome_curso+'}'
-    head+='\n'+'\maketitle'
-
-    head+='\n'+'\section{INTRODUÇÃO}'    
-    head+='\n'+'Este relatório objetiva apresentar os resultados da avaliação de disciplinas do Curso \
-    de '+nome_curso+' da Universidade Federal de Juiz de Fora, código e-MEC '+str(cod_emec)+', realizada pela \
-    Diretoria de Avaliação Institucional e os encaminhamentos propostos a \
-    partir destes resultados.'    
-    
-    head+='\n'+''    
-    head+='\n'+'\\begin{center}'
-    head+='\n'+'\\begin{tabularx}{\linewidth}{r|X}'
-    head+='\n'+'\nPúblico-alvo:& Curso de '+nome_curso+'\\\\'
-    #head+='\n'+'\nCampus:& '+campus+'\\\\'
-    head+='\n'+'\nPeríodo de coleta de dados:& '+str(ano)+'/'+str(periodo)+'.'+'\\\\'
-    head+='\n'+'\nForma de aplicação:& Online, por meio do SIGA.'+'\\\\'
-    head+='\n'+'\nAlunos respondentes:& '+str(n_alunos_respondentes)+'\\\\'
-    #head+='\n'+'\nProfessores respondentes:& '+str(n_prof_respondentes)+'\\\\'
-    head+='\n'+'\end{tabularx}'
-    head+='\n'+'\end{center}'
-    head+='\n'+''    
-
-
-    head+='\n'+'\section{MÉTODOS}'    
-    head+='\n'+'Este relatório se refere ao período '+str(ano)+'/'+str(periodo)+', com base em dados \
-    coletados através da aplicação de instrumentos de avaliação via SIGA \
-    implementados pela Diretoria de Avaliação Institucional (DIAVI) da UFJF, em atendimento \
-    ao que estabelece a Lei Sinais e a Resolução Consu 13/2015 (UFJF), \
-    com objetivo de contribuir para a avaliação própria do curso de '+nome_curso+' (código e-MEC'\
-    +str(cod_emec)+'). Foram aplicados um instrumento para discentes e outro para docentes, ambos contendo \
-    15 questões versando sobre as disciplinas na modalidade presencial oferecidas pela UFJF no \
-    referido período, visando, especificamente, coletar impressões sobre: atuação docente, atuação discente, \
-    recursos empregados, qualidade da disciplina ministrada. \
-    As respostas foram colhidas entre os dias 19/07/2018 e 12/08/2018, com participação espontânea e garantia de\
-    sigilo de participantes e avaliados.'
-
-    
-    head+='\n'+'\section{FORMULÁRIO}'
-    
-    head+='\n'+'As seguintes questões foram {\\bf objeto de avaliação pelos discentes} através do SIGA.'
-    head+='\n'+''
-
-#    P = pd.read_csv('lista_questoes_alunos_formulario.csv', sep=';', 
-#                    header=None, error_bad_lines=False, encoding='latin-1')
-    P = pd.read_csv('lista_questoes_alunos.csv', sep=';', 
-                    header=None, error_bad_lines=False, encoding='latin-1')
-    head+='\n'+'\small{'    
-    head+='\n'+'\\begin{center}'
-    head+='\n'+'\\begin{tabularx}{\linewidth}{l|X}'
-    for i in range(len(P)):
-        a,b = P.iloc[i]
-        c='\\\\\\\\' if i!=len(P)-1 else ''
-        #c='\\\\\\hline' if i!=len(P)-1 else ''
-        head+='\n'+a+'&'+b+c
-    head+='\n'+'\end{tabularx}'
-    head+='\n'+'\end{center}'
-    head+='\n'+'}'    
-        
-  
-        
-    head+='\n'+'As questões abaixo foram {\\bf objeto de avaliação pelos docentes} através do SIGA.'
-    head+='\n'+''
-
-#    P = pd.read_csv('lista_questoes_docentes_formulario.csv', sep=';', 
-#                    header=None, error_bad_lines=False, encoding='latin-1')
-    P = pd.read_csv('lista_questoes_docentes.csv', sep=';', 
-                    header=None, error_bad_lines=False, encoding='latin-1')
-    head+='\n'+'\small{'    
-    head+='\n'+'\\begin{center}'
-    head+='\n'+'\\begin{tabularx}{\linewidth}{c|X}'
-    for i in range(len(P)):
-        a,b = P.iloc[i]
-        c='\\\\\\\\' if i!=len(P)-1 else ''
-        #c='\\\\\\hline' if i!=len(P)-1 else ''
-        head+='\n'+a+'&'+b+c
-    head+='\n'+'\end{tabularx}'
-    head+='\n'+'\end{center}'
-    head+='\n'+'}'
-
-
-    head+='\n'+'\section{RESPOSTAS}'
-    head+='\n'+"As questões podem ser respondidas com um número de 1 a 5 numa escala que vai de {\it Discordo Totalmente} (1) a {\it Concordo Totalmente} (5). Não sendo permitidas múltiplas respostas e sendo possível a alteração antes do envio do formulário. O valor 0 (zero) indica {\it Não se Aplica}."
-    head+='\n'+''    
-    head+='\n'+'\\begin{figure}[h]'
-    head+='\n'+'\centering'
-    head+='\n'+'\includegraphics[width=0.85\linewidth]{resposta_questoes_curso_'+str(cod_emec)+'}'
-    head+='\n'+'\caption{\label{fig:qalunos}Distribuição das respostas dos discentes para as questões apresentadas}'
-    head+='\n'+'\end{figure}'
-
-    head+='\n'+''    
-    head+='\n'+'\\begin{figure}[h]'
-    head+='\n'+'\centering'
-    head+='\n'+'\includegraphics[width=0.999\linewidth]{matriz_corr__'+str(cod_emec)+'}'
-    head+='\n'+'\caption{\label{fig:corr_alunos}Correlação das respostas dos discentes para as questões apresentadas}'
-    head+='\n'+'\end{figure}'
-
-#    if n_prof_respondentes>0:
+#    print(cod_emec, nome_curso, ano, periodo, n_alunos_respondentes)
+#
+#    head =''
+#    head+='\n'+'\documentclass[a4paper,10pt]{article}'
+#    head+='\n'+'\\usepackage{ucs}'
+#    head+='\n'+'\\usepackage[utf8]{inputenc}'
+#    head+='\n'+'\\usepackage[brazil]{babel}'
+#    head+='\n'+'\\usepackage{fontenc}'
+#    head+='\n'+'\\usepackage{graphicx,tabularx}'
+#    head+='\n'+'\\usepackage[]{hyperref}'
+#    head+='\n'+'\sloppy'    
+#    head+='\n'+'\date{Data de processamento: \\today}'    
 #    
+#    head+='\\begin{document}'
+#    
+#    head+='\n'+'\\author{Diretoria de Avaliação Institucional (DIAVI) \\\\ Universidade Federal de Juiz de Fora}'+'\n'
+#    head+='\n'+'\\title{RELATÓRIO DE RESULTADOS DA AVALIAÇÃO DO CURSO DE '+nome_curso+'}'
+#    head+='\n'+'\maketitle'
+#
+#    head+='\n'+'\section{INTRODUÇÃO}'    
+#    head+='\n'+'Este relatório objetiva apresentar os resultados da avaliação de disciplinas do Curso \
+#    de '+nome_curso+' da Universidade Federal de Juiz de Fora, código e-MEC '+str(cod_emec)+', realizada pela \
+#    Diretoria de Avaliação Institucional e os encaminhamentos propostos a \
+#    partir destes resultados.'    
+#    
+#    head+='\n'+''    
+#    head+='\n'+'\\begin{center}'
+#    head+='\n'+'\\begin{tabularx}{\linewidth}{r|X}'
+#    head+='\n'+'\nPúblico-alvo:& Curso de '+nome_curso+'\\\\'
+#    #head+='\n'+'\nCampus:& '+campus+'\\\\'
+#    head+='\n'+'\nPeríodo de coleta de dados:& '+str(ano)+'/'+str(periodo)+'.'+'\\\\'
+#    head+='\n'+'\nForma de aplicação:& Online, por meio do SIGA.'+'\\\\'
+#    head+='\n'+'\nAlunos respondentes:& '+str(n_alunos_respondentes)+'\\\\'
+#    #head+='\n'+'\nProfessores respondentes:& '+str(n_prof_respondentes)+'\\\\'
+#    head+='\n'+'\end{tabularx}'
+#    head+='\n'+'\end{center}'
+#    head+='\n'+''    
+#
+#
+#    head+='\n'+'\section{MÉTODOS}'    
+#    head+='\n'+'Este relatório se refere ao período '+str(ano)+'/'+str(periodo)+', com base em dados \
+#    coletados através da aplicação de instrumentos de avaliação via SIGA \
+#    implementados pela Diretoria de Avaliação Institucional (DIAVI) da UFJF, em atendimento \
+#    ao que estabelece a Lei Sinais e a Resolução Consu 13/2015 (UFJF), \
+#    com objetivo de contribuir para a avaliação própria do curso de '+nome_curso+' (código e-MEC'\
+#    +str(cod_emec)+'). Foram aplicados um instrumento para discentes e outro para docentes, ambos contendo \
+#    15 questões versando sobre as disciplinas na modalidade presencial oferecidas pela UFJF no \
+#    referido período, visando, especificamente, coletar impressões sobre: atuação docente, atuação discente, \
+#    recursos empregados, qualidade da disciplina ministrada. \
+#    As respostas foram colhidas entre os dias 19/07/2018 e 12/08/2018, com participação espontânea e garantia de\
+#    sigilo de participantes e avaliados.'
+#
+#    
+#    head+='\n'+'\section{FORMULÁRIO}'
+#    
+#    head+='\n'+'As seguintes questões foram {\\bf objeto de avaliação pelos discentes} através do SIGA.'
+#    head+='\n'+''
+#
+##    P = pd.read_csv('lista_questoes_alunos_formulario.csv', sep=';', 
+##                    header=None, error_bad_lines=False, encoding='latin-1')
+#    P = pd.read_csv('lista_questoes_alunos.csv', sep=';', 
+#                    header=None, error_bad_lines=False, encoding='latin-1')
+#    head+='\n'+'\small{'    
+#    head+='\n'+'\\begin{center}'
+#    head+='\n'+'\\begin{tabularx}{\linewidth}{l|X}'
+#    for i in range(len(P)):
+#        a,b = P.iloc[i]
+#        c='\\\\\\\\' if i!=len(P)-1 else ''
+#        #c='\\\\\\hline' if i!=len(P)-1 else ''
+#        head+='\n'+a+'&'+b+c
+#    head+='\n'+'\end{tabularx}'
+#    head+='\n'+'\end{center}'
+#    head+='\n'+'}'    
+#        
+#  
+#        
+#    head+='\n'+'As questões abaixo foram {\\bf objeto de avaliação pelos docentes} através do SIGA.'
+#    head+='\n'+''
+#
+##    P = pd.read_csv('lista_questoes_docentes_formulario.csv', sep=';', 
+##                    header=None, error_bad_lines=False, encoding='latin-1')
+#    P = pd.read_csv('lista_questoes_docentes.csv', sep=';', 
+#                    header=None, error_bad_lines=False, encoding='latin-1')
+#    head+='\n'+'\small{'    
+#    head+='\n'+'\\begin{center}'
+#    head+='\n'+'\\begin{tabularx}{\linewidth}{c|X}'
+#    for i in range(len(P)):
+#        a,b = P.iloc[i]
+#        c='\\\\\\\\' if i!=len(P)-1 else ''
+#        #c='\\\\\\hline' if i!=len(P)-1 else ''
+#        head+='\n'+a+'&'+b+c
+#    head+='\n'+'\end{tabularx}'
+#    head+='\n'+'\end{center}'
+#    head+='\n'+'}'
+#
+#
+#    head+='\n'+'\section{RESPOSTAS}'
+#    head+='\n'+"As questões podem ser respondidas com um número de 1 a 5 numa escala que vai de {\it Discordo Totalmente} (1) a {\it Concordo Totalmente} (5). Não sendo permitidas múltiplas respostas e sendo possível a alteração antes do envio do formulário. O valor 0 (zero) indica {\it Não se Aplica}."
+#    head+='\n'+''    
+#    head+='\n'+'\\begin{figure}[h]'
+#    head+='\n'+'\centering'
+#    head+='\n'+'\includegraphics[width=0.85\linewidth]{resposta_questoes_curso_'+str(cod_emec)+'}'
+#    head+='\n'+'\caption{\label{fig:qalunos}Distribuição das respostas dos discentes para as questões apresentadas}'
+#    head+='\n'+'\end{figure}'
+#
+#    head+='\n'+''    
+#    head+='\n'+'\\begin{figure}[h]'
+#    head+='\n'+'\centering'
+#    head+='\n'+'\includegraphics[width=0.999\linewidth]{matriz_corr__'+str(cod_emec)+'}'
+#    head+='\n'+'\caption{\label{fig:corr_alunos}Correlação das respostas dos discentes para as questões apresentadas}'
+#    head+='\n'+'\end{figure}'
+#
+##    if n_prof_respondentes>0:
+##    
+##        head+='\n'+''
+##        head+='\n'+'\\begin{figure}[h]'
+##        head+='\n'+'\centering'
+##        head+='\n'+'\includegraphics[width=0.85\linewidth]{resposta_questoes_curso_'+curso+'_docentes}'
+##        head+='\n'+'\caption{\label{fig:qdocentes}Distribuição das respostas dos docentes}'
+##        head+='\n'+'\end{figure}'
+##    
+##        head+='\n'+''
+##        head+='\n'+'\\begin{figure}[h]'
+##        head+='\n'+'\centering'
+##        head+='\n'+'\includegraphics[width=0.8\linewidth]{comparacao_hori_resposta_curso_'+curso+'}'
+##        head+='\n'+'\caption{\label{fig:comp}Compararação das respostas dos docentes e alunos}'
+##        head+='\n'+'\end{figure}'
+##        head+='\n'+''
+#    
+#    if n_alunos_respondentes>0:
+#    
+#        head+='\n'+'\\begin{figure}[h]'
+#        head+='\n'+'\centering'
+#        head+='\n'+'\includegraphics[width=0.7\linewidth]{ingresso_discentes_curso_ano_'+str(cod_emec)+'}'
+#        head+='\n'+'\caption{\label{fig:ingressoano} Perfil  dos alunos respondentes em função do tipo de ingresso.}'
+#        head+='\n'+'\end{figure}'
 #        head+='\n'+''
 #        head+='\n'+'\\begin{figure}[h]'
 #        head+='\n'+'\centering'
-#        head+='\n'+'\includegraphics[width=0.85\linewidth]{resposta_questoes_curso_'+curso+'_docentes}'
-#        head+='\n'+'\caption{\label{fig:qdocentes}Distribuição das respostas dos docentes}'
+#        head+='\n'+'\includegraphics[width=0.99\linewidth]{ingresso_discentes_curso_tipo_'+str(cod_emec)+'}'
+#        head+='\n'+'\caption{\label{fig:ingressoano} Perfil  dos alunos respondentes  em função do ano de ingresso.}'
 #        head+='\n'+'\end{figure}'
-#    
 #        head+='\n'+''
 #        head+='\n'+'\\begin{figure}[h]'
 #        head+='\n'+'\centering'
-#        head+='\n'+'\includegraphics[width=0.8\linewidth]{comparacao_hori_resposta_curso_'+curso+'}'
-#        head+='\n'+'\caption{\label{fig:comp}Compararação das respostas dos docentes e alunos}'
+#        head+='\n'+'\includegraphics[width=0.99\linewidth]{quantitativos_estado_de_origem_'+str(cod_emec)+'}'
+#        head+='\n'+'\caption{\label{fig:estadoano} Estado de origem dos alunos respondentes em função do ano de ingresso.}'
 #        head+='\n'+'\end{figure}'
 #        head+='\n'+''
-    
-    if n_alunos_respondentes>0:
-    
-        head+='\n'+'\\begin{figure}[h]'
-        head+='\n'+'\centering'
-        head+='\n'+'\includegraphics[width=0.7\linewidth]{ingresso_discentes_curso_ano_'+str(cod_emec)+'}'
-        head+='\n'+'\caption{\label{fig:ingressoano} Perfil  dos alunos respondentes em função do tipo de ingresso.}'
-        head+='\n'+'\end{figure}'
-        head+='\n'+''
-        head+='\n'+'\\begin{figure}[h]'
-        head+='\n'+'\centering'
-        head+='\n'+'\includegraphics[width=0.99\linewidth]{ingresso_discentes_curso_tipo_'+str(cod_emec)+'}'
-        head+='\n'+'\caption{\label{fig:ingressoano} Perfil  dos alunos respondentes  em função do ano de ingresso.}'
-        head+='\n'+'\end{figure}'
-        head+='\n'+''
-        head+='\n'+'\\begin{figure}[h]'
-        head+='\n'+'\centering'
-        head+='\n'+'\includegraphics[width=0.99\linewidth]{quantitativos_estado_de_origem_'+str(cod_emec)+'}'
-        head+='\n'+'\caption{\label{fig:estadoano} Estado de origem dos alunos respondentes em função do ano de ingresso.}'
-        head+='\n'+'\end{figure}'
-        head+='\n'+''
-        head+='\n'+'\\begin{figure}[h]'
-        head+='\n'+'\centering'
-        head+='\n'+'\includegraphics[width=0.99\linewidth]{quantitativos_bolsa_de_apoio_'+str(cod_emec)+'}'
-        head+='\n'+'\caption{\label{fig:bolsaano} Bolsas de apoio para os alunos respondentes em função do ano de ingresso.}'
-        head+='\n'+'\end{figure}'
-
-
-    head+='\n\n'+'\end{document}'
-
-    fbase='relatorio_'+str(ano)+'_'+str(periodo)+'_codigo_emec_'+str(cod_emec)
-    ftex=fbase+'.tex'
-    fpdf=fbase+'.pdf'
-    with open(ftex, 'w') as f:  
-        f.write(head)  
-
-    f.close()
-
-    os.system('pdflatex '+ftex) 
-    os.system('mv '+fpdf+' '+dir_pdf) 
-    for ext in ['.log', '.aux', '.out',  ]:
-        os.system('mv '+fbase+ext+' /tmp') 
+#        head+='\n'+'\\begin{figure}[h]'
+#        head+='\n'+'\centering'
+#        head+='\n'+'\includegraphics[width=0.99\linewidth]{quantitativos_bolsa_de_apoio_'+str(cod_emec)+'}'
+#        head+='\n'+'\caption{\label{fig:bolsaano} Bolsas de apoio para os alunos respondentes em função do ano de ingresso.}'
+#        head+='\n'+'\end{figure}'
+#
+#
+#    head+='\n\n'+'\end{document}'
+#
+#    fbase='relatorio_'+str(ano)+'_'+str(periodo)+'_codigo_emec_'+str(cod_emec)
+#    ftex=fbase+'.tex'
+#    fpdf=fbase+'.pdf'
+#    with open(ftex, 'w') as f:  
+#        f.write(head)  
+#
+#    f.close()
+#
+#    os.system('pdflatex '+ftex) 
+#    os.system('mv '+fpdf+' '+dir_pdf) 
+#    for ext in ['.log', '.aux', '.out',  ]:
+#        os.system('mv '+fbase+ext+' /tmp') 
     
     
 #%%
@@ -1655,10 +1655,11 @@ for cod_emec, df1 in C.groupby(['Código e-MEC']):
     mask = np.zeros_like(corr, dtype=np.bool)
     mask[np.triu_indices_from(mask)] = True
     corr=np.round(corr, decimals=2)
-    pl.figure(figsize=(15, 15))
+    pl.figure(figsize=(16, 16))
     sns.heatmap(corr, mask=mask, cmap='jet', #cmap=cmap, #vmin=.0, vmax=1., 
                 center=0, square=True, linewidths=.5, 
-                annot=True, cbar_kws={"shrink": .7}
+                annot=True, 
+                cbar_kws = dict(use_gridspec=False, location="bottom",  shrink=0.7)
                 )
     
     pl.title(u"Correlação entre as questões respondidas pelos alunos\n"+nome_curso)
@@ -1673,9 +1674,9 @@ for cod_emec, df1 in C.groupby(['Código e-MEC']):
     head+='\n'+'\caption{\label{fig:corr_alunos}Correlação das respostas dos discentes do curso '+nome_curso+' para as questões apresentadas}'
     head+='\n'+'\end{figure}'
     #--
-
-    pl.figure()
     df_aux=df1.drop_duplicates(subset=['Aluno', 'Tipo Ingresso', 'Ano Ingresso'])
+    #--
+    pl.figure()
     ct = pd.crosstab(df_aux['Tipo Ingresso'], df_aux['Ano Ingresso'].astype('int').astype('str'))
     n_colors=df_aux['Tipo Ingresso'].unique().shape[0]+1
     sns.set_palette("Set1", )#n_colors=n_colors,)   
@@ -1686,8 +1687,67 @@ for cod_emec, df1 in C.groupby(['Código e-MEC']):
     tit=re.sub('\n', ' ', nome_curso)+' - Total de alunos:'+str(n_respondentes['ALUNO_TURMA'])
     g.set_title(tit)
     g.legend(title='Ano', )#loc='center left', bbox_to_anchor=(1.0, 0.5))
-    #pl.savefig('ingresso_discentes_curso_ano_'+id_curso+'.png', dpi=300,bbox_inches='tight')
-    
+    fn = 'ingresso_discentes_curso_ano_'+cod_emec+'.png'
+    pl.savefig(fn, dpi=300,bbox_inches='tight')
+     
+    head+='\n'+'\\begin{figure}[h]'
+    head+='\n'+'\centering'
+    head+='\n'+'\includegraphics[width=0.7\linewidth]{'+fn+'}'
+    head+='\n'+'\caption{\label{fig:ingresso_ano} Perfil do ano de ingresso dos alunos respondentes em função de ingresso.}'
+    head+='\n'+'\end{figure}'
+    head+='\n'+''
+    #--
+    ct = pd.crosstab(df_aux['Tipo Ingresso'], df_aux['Ano Ingresso'].astype('int').astype('str'))
+    g = ct.T.plot.bar(stacked=True)
+    g.set_ylabel(u'Número de alunos')
+    if g.get_yticks().max()>=2:
+        g.set_yticklabels(['{:.0f}'.format(x*1) for x in g.get_yticks()]) 
+    tit=re.sub('\n', ' ', nome_curso)+' - Total de alunos:'+str(n_respondentes['ALUNO_TURMA'])
+    g.set_title(tit)
+    g.legend(title='Tipo de ingresso',)#loc='center left', bbox_to_anchor=(1.0, 0.5))
+    fn = 'ingresso_discentes_curso_tipo_'+cod_emec+'.png'
+    pl.savefig(fn, dpi=300,bbox_inches='tight')
+
+    head+='\n'+'\\begin{figure}[h]'
+    head+='\n'+'\centering'
+    head+='\n'+'\includegraphics[width=0.7\linewidth]{'+fn+'}'
+    head+='\n'+'\caption{\label{fig:tipo_ingresso_ano}  Perfil  do tipo de ingresso dos alunos respondentes  em função do ano de ingresso.}'
+    head+='\n'+'\end{figure}'
+    head+='\n'+''
+    #--
+    ct=pd.crosstab(df_aux['Ano Ingresso'].astype('int'), df_aux['Estado']); 
+    g = ct.plot.bar(stacked=True, )
+    g.set_yticklabels(['{:.0f}'.format(x*1) for x in g.get_yticks()]) 
+    tit=u'Estado de origem - Total de alunos:'+str(n_respondentes['ALUNO_TURMA'])
+    g.set_title(tit)
+    g.set_ylabel(u'Número de discentes respondentes')
+    g.legend(title='Estado',)# loc='center left', bbox_to_anchor=(1.0, 0.5))
+    fn='quantitativos_estado_de_origem_'+cod_emec+'.png'
+    pl.savefig(fn, dpi=300,bbox_inches='tight')
+ 
+    head+='\n'+'\\begin{figure}[h]'
+    head+='\n'+'\centering'
+    head+='\n'+'\includegraphics[width=0.7\linewidth]{'+fn+'}'
+    head+='\n'+'\caption{\label{fig:estado_ano} Perfil do estado de origem dos alunos respondentes em função do ano de ingresso.}'
+    head+='\n'+'\end{figure}'
+    head+='\n'+''
+    #-- 
+    ct=pd.crosstab(df_aux['Ano Ingresso'].astype('int'), df_aux['Bolsa Apoio']); 
+    g = ct.plot.bar(stacked=True, )    
+    g.set_yticklabels(['{:.0f}'.format(x*1) for x in g.get_yticks()]) 
+    tit=u'Bolsas de Apoio - Total de alunos:'+str(n_respondentes['ALUNO_TURMA'])
+    g.set_title(tit)
+    g.set_ylabel(u'Número de discentes com bolsa de apoio')
+    g.legend(title='Bolsa de Apoio',)# loc='center left', bbox_to_anchor=(1.0, 0.5))
+    fn='quantitativos_bolsa_de_apoio_'+cod_emec+'.png'
+    pl.savefig(fn, dpi=300,bbox_inches='tight')
+ 
+    head+='\n'+'\\begin{figure}[h]'
+    head+='\n'+'\centering'
+    head+='\n'+'\includegraphics[width=0.7\linewidth]{'+fn+'}'
+    head+='\n'+'\caption{\label{fig:bolsa_ano} Perfil das bolsas de apoio  dos alunos respondentes em função do ano de ingresso.}'
+    head+='\n'+'\end{figure}'
+    head+='\n'+''
     #--
     head+='\n\n'+'\end{document}'
 
