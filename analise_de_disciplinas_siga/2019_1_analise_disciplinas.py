@@ -1624,6 +1624,33 @@ for cod_emec, df1 in C.groupby(['Código e-MEC']):
     head+='\n'+"As questões podem ser respondidas com um número de 1 a 5 numa escala que vai de {\it Discordo Totalmente} (1) a {\it Concordo Totalmente} (5). Não sendo permitidas múltiplas respostas e sendo possível a alteração antes do envio do formulário. O valor 0 (zero) indica {\it Não se Aplica}."
     head+='\n'+''          
     #--
+    pl.figure()
+    ct = pd.crosstab(df1['Questao'], df1['Resposta'].astype('str'))
+    ct = ct/(ct.sum(axis=1).mean())
+    for i in colnames:
+        if not i in ct.columns:
+            ct[i]=0
+            
+    ct=ct[np.sort(ct.columns)]
+    sns.set_palette("Set1", n_colors=len(colnames),) 
+    g = ct.plot.bar(stacked=True)
+    g.legend(title='Escala\nLikert', loc='center left', bbox_to_anchor=(1.0, 0.5))
+    g.set_ylim([0,1])
+    g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
+    g.set_ylabel(u'Porcentagem de questões respondidas\n pelos alunos')
+    g.set_xlabel(u'')
+    g.set_title(nome_curso+' ('+str(ano)+'-'+str(periodo)+')')
+    fn = 'resposta_questoes_curso_'+str(cod_emec)+'.png'
+    pl.savefig(fn, dpi=300,bbox_inches='tight')
+    pl.show()
+    
+    head+='\n'+''    
+    head+='\n'+'\\begin{figure}[h]'
+    head+='\n'+'\centering'
+    head+='\n'+'\includegraphics[width=0.999\linewidth]{'+fn+'}'
+    head+='\n'+'\caption{\label{fig:resposta_questoes_curso}Distribuição das respostas dos discentes para as questões apresentadas}'
+    head+='\n'+'\end{figure}'
+    #--
     corr = df1[questoes].corr()
     mask = np.zeros_like(corr, dtype=np.bool)
     mask[np.triu_indices_from(mask)] = True
@@ -1635,8 +1662,7 @@ for cod_emec, df1 in C.groupby(['Código e-MEC']):
                 )
     
     pl.title(u"Correlação entre as questões respondidas pelos alunos\n"+nome_curso)
-    emec=df['Código e-MEC'].unique()[0]
-    fn='matriz_corr__'+str(emec)+'.png'
+    fn='matriz_corr__'+str(cod_emec)+'.png'
     pl.savefig(fn, dpi=300,bbox_inches='tight')
     pl.show()
         
@@ -1648,6 +1674,21 @@ for cod_emec, df1 in C.groupby(['Código e-MEC']):
     head+='\n'+'\end{figure}'
     #--
 
+    pl.figure()
+    df_aux=df1.drop_duplicates(subset=['Aluno', 'Tipo Ingresso', 'Ano Ingresso'])
+    ct = pd.crosstab(df_aux['Tipo Ingresso'], df_aux['Ano Ingresso'].astype('int').astype('str'))
+    n_colors=df_aux['Tipo Ingresso'].unique().shape[0]+1
+    sns.set_palette("Set1", )#n_colors=n_colors,)   
+    g = ct.plot.bar(stacked=True)
+    g.set_ylabel(u'Número de alunos')
+    if g.get_yticks().max()>=2:
+        g.set_yticklabels(['{:.0f}'.format(x*1) for x in g.get_yticks()]) 
+    tit=re.sub('\n', ' ', nome_curso)+' - Total de alunos:'+str(n_respondentes['ALUNO_TURMA'])
+    g.set_title(tit)
+    g.legend(title='Ano', )#loc='center left', bbox_to_anchor=(1.0, 0.5))
+    #pl.savefig('ingresso_discentes_curso_ano_'+id_curso+'.png', dpi=300,bbox_inches='tight')
+    
+    #--
     head+='\n\n'+'\end{document}'
 
     fbase='novo_relatorio_'+str(ano)+'_'+str(periodo)+'_codigo_emec_'+str(cod_emec)
