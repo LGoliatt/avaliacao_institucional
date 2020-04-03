@@ -779,7 +779,6 @@ g.legend(title='Ingresso', loc='center left', bbox_to_anchor=(1.0, 0.5))
 pl.savefig('tipo_de_ingresso_geral.png', dpi=300,bbox_inches='tight')
 #pl.show()
 #%%
-
 for d, df in A.groupby(['Código e-MEC']):
     id_curso=str(d)#str(df['Código e-MEC'].unique())
     print(d, id_curso)
