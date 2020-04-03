@@ -670,11 +670,13 @@ A = []
 for i in range(len(X)):
     df = X.iloc[i]
     for q in questoes:
+        df[q]=float(df[q])
         dic = dict(df)#[cabecalho])
         dic['Questao']  = q#.decode('latin1').encode('utf8')
         dic['Resposta'] = df[q]
         #dic['Resposta'] = 'NA' if np.isnan(df[q]) else str(df[q])
         #dic['Resposta'] = 'NA' if np.isnan(df[q]) else int(df[q])
+        #print(df[q])
         dic['Resposta'] = 0 if np.isnan(df[q]) else int(df[q])
         #dic['Resposta'] = 'NA' if np.isnan(df[q]) else int(df[q])
         #dic['Resposta'] = 'NA' if df[q]==0 else int(df[q])
