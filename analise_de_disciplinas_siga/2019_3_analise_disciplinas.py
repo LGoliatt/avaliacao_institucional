@@ -694,6 +694,7 @@ B = []
 for i in range(len(Y)):
     df = Y.iloc[i]
     for q in questoes_docentes:
+        df[q]=float(df[q])
         dic = dict(df)#[cabecalho_docente])
         dic['Questao']  = q#.decode('latin1').encode('utf8')
         #dic['Resposta'] = df[q]
