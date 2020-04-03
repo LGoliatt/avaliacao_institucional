@@ -407,8 +407,10 @@ for i, df in X.groupby(['Código e-MEC']):
              'IRA':df1['IRA'].unique()[0]}
         aluno.append(aux)
         info_aluno.append(aux)
-        
-    dic={'Curso':i, 'NA':n, 'IRA':fstat(df['IRA'])}    
+
+    # alguns valores estavam com o separador "," no lugar do ponto "."
+    v=np.array([str(i).replace(',','.') for i in df['IRA']]).astype(float)        
+    dic={'Curso':i, 'NA':n, 'IRA':fstat(v)}    
     
     aluno = pd.DataFrame(aluno)
     
