@@ -44,16 +44,16 @@ Código SIGA	Código e-MEC	Curso	Turno	Modalidade	Observações
 48A	21589	TURISMO 	Noturno	Bacharelado	curso antigo
 52A	21589	TURISMO	Integral	Bacharelado	curso antigo
 93A	21589	TURISMO	Noturno	Bacharelado	
-65H; 65AH	1109475	ENGENHARIA ELÉTRICA  ENERGIA	Noturno	Bacharelado	acesso via Ciências Exatas
-70A	1109475	ENGENHARIA ELÉTRICA  ENERGIA	Noturno	Bacharelado	
-65I; 65AI	1109485	ENGENHARIA ELÉTRICA  ROBÓTICA E AUTOMAÇÃO INDUSTRIAL	Integral	Bacharelado	acesso via Ciências Exatas
-69B	1109485	ENGENHARIA ELÉTRICA  ROBÓTICA E AUTOMAÇÃO INDUSTRIAL	Integral	Bacharelado	
-69C	1109486	ENGENHARIA ELÉTRICA  SISTEMAS DE POTÊNCIA	Integral	Bacharelado	
-65J; 65AJ	1109486	ENGENHARIA ELÉTRICA  SISTEMAS DE POTÊNCIA	Integral	Bacharelado	acesso via Ciências Exatas
-69A	1109487	ENGENHARIA ELÉTRICA  SISTEMAS ELETRÔNICOS	Integral	Bacharelado	
-65K; 65AK	1109487	ENGENHARIA ELÉTRICA  SISTEMAS ELETRÔNICOS	Integral	Bacharelado	acesso via Ciências Exatas
-69D; 65AD	1109488	ENGENHARIA ELÉTRICA  TELECOMUNICAÇÕES	Integral	Bacharelado	
-65L; 65AJ	1109488	ENGENHARIA ELÉTRICA  TELECOMUNICAÇÕES	Integral	Bacharelado	acesso via Ciências Exatas
+65H; 65AH	1109475	ENGENHARIA ELÉTRICA - ENERGIA	Noturno	Bacharelado	acesso via Ciências Exatas
+70A	1109475	ENGENHARIA ELÉTRICA - ENERGIA	Noturno	Bacharelado	
+65I; 65AI	1109485	ENGENHARIA ELÉTRICA - ROBÓTICA E AUTOMAÇÃO INDUSTRIAL	Integral	Bacharelado	acesso via Ciências Exatas
+69B	1109485	ENGENHARIA ELÉTRICA - ROBÓTICA E AUTOMAÇÃO INDUSTRIAL	Integral	Bacharelado	
+69C	1109486	ENGENHARIA ELÉTRICA - SISTEMAS DE POTÊNCIA	Integral	Bacharelado	
+65J; 65AJ	1109486	ENGENHARIA ELÉTRICA - SISTEMAS DE POTÊNCIA	Integral	Bacharelado	acesso via Ciências Exatas
+69A	1109487	ENGENHARIA ELÉTRICA - SISTEMAS ELETRÔNICOS	Integral	Bacharelado	
+65K; 65AK	1109487	ENGENHARIA ELÉTRICA - SISTEMAS ELETRÔNICOS	Integral	Bacharelado	acesso via Ciências Exatas
+69D; 65AD	1109488	ENGENHARIA ELÉTRICA - TELECOMUNICAÇÕES	Integral	Bacharelado	
+65L; 65AJ	1109488	ENGENHARIA ELÉTRICA - TELECOMUNICAÇÕES	Integral	Bacharelado	acesso via Ciências Exatas
 71A	1109489	ENGENHARIA MECÂNICA	Integral	Bacharelado	
 65M; 65AM	1109489	ENGENHARIA MECÂNICA	Integral	Bacharelado	acesso via Ciências Exatas
 55A	113531	ESTATÍSTICA	Integral	Bacharelado	
@@ -99,7 +99,7 @@ Código SIGA	Código e-MEC	Curso	Turno	Modalidade	Observações
 28B	313100	HISTÓRIA	Noturno	Bacharelado	
 11L	13100	HISTÓRIA	Integral	Licenciatura	
 28L	13100	HISTÓRIA	Noturno	Licenciatura	
-66A	116500	INTERDISCIPLINAR EM ARTES E DESIGN	Integral	Bacharelado	 BIAD  curso em Extinção
+66A	116500	INTERDISCIPLINAR EM ARTES E DESIGN	Integral	Bacharelado	 BIAD - curso em Extinção
 72A	1120242	INTERDISCIPLINAR EM CIÊNCIAS HUMANAS	Integral	Bacharelado	 BACH
 73A	1120242	INTERDISCIPLINAR EM CIÊNCIAS HUMANAS	Noturno	Bacharelado	 BACH
 84A	27657	JORNALISMO	Integral	Bacharelado	
@@ -110,7 +110,7 @@ Código SIGA	Código e-MEC	Curso	Turno	Modalidade	Observações
 13B;13BES; 13BFR; 13BIN; 13BIT; 13BLT; 13BPO	313101	LETRAS	Integral	Bacharelado	
 13LES; 13LFR; 13LIN; 13LIT; 13LLT; 13LPO	13101	LETRAS	Integral	Licenciatura	
 29LPO	13101	LETRAS	Noturno	Licenciatura	
-88A	1268983	LETRAS  LIBRAS	Noturno	Licenciatura	
+88A	1268983	LETRAS - LIBRAS	Noturno	Licenciatura	
 65FB	313102	MATEMÁTICA	Integral	Bacharelado	acesso via Ciências Exatas
 14B	313102	MATEMÁTICA	Integral	Bacharelado	curso antigo
 82A	1166038	MATEMÁTICA	Noturno	Licenciatura	

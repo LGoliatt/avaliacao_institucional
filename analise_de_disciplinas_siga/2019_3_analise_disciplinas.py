@@ -95,7 +95,7 @@ X=X[X['Ano']!='#']
 Y=Y[Y['Ano']!='#']
 
 X=X[X['Curso Aluno']!='00A']
-    
+   
 #%%
 print('-'*80+'\n'+'Lista dos professores que responderam os questionarios e também \nforam avaliados pelo alunos'+
       '\n'+'-'*80)
