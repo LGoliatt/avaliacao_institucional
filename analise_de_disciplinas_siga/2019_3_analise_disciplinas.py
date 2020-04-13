@@ -97,18 +97,18 @@ Y=Y[Y['Ano']!='#']
 X=X[X['Curso Aluno']!='00A']
    
 #%%
-print('-'*80+'\n'+'Lista dos professores que responderam os questionarios e também \nforam avaliados pelo alunos'+'\n'+'-'*80)
+#print('-'*80+'\n'+'Lista dos professores que responderam os questionarios e também \nforam avaliados pelo alunos'+'\n'+'-'*80)
 
 dic_prof={}
 for p in Y['Professor'].unique():
-    print(p, end=' -- ')
+    #print(p, end=' -- ')
     if p in X['Professor'].unique():
         aux=X[X['Professor']==p]
         c_ = '|'.join(aux['Curso Aluno'].unique())
         #print(c_, end='\n')
         dic_prof[p]=c_
     else:
-        print(None)
+        #print(None)
         dic_prof[p]=None
 
 Y['Cursos'] = [ dic_prof[p] for p in Y['Professor'] ]
@@ -891,12 +891,12 @@ colnames=[str(i) for i in range(max_likert+1)]
 ##pl.show()
     
 #%%
-for d, df in A.groupby(['Código e-MEC']):
-    #d=d.replace('/','-')
-    print(d)
-    #df=df[df['Resposta']!='NA']
-    n_colors=df['Questao'].unique().shape[0]
-    sns.set_palette("Set2", n_colors=n_colors,)   
+#for d, df in A.groupby(['Código e-MEC']):
+#    #d=d.replace('/','-')
+#    print(d)
+#    #df=df[df['Resposta']!='NA']
+#    n_colors=df['Questao'].unique().shape[0]
+#    sns.set_palette("Set2", n_colors=n_colors,)   
 
 #    pl.figure()
 #    ct = pd.crosstab(df['Questao'], df['Resposta'].astype('str'))
@@ -1043,15 +1043,15 @@ for d, df in A.groupby(['Código e-MEC']):
 ##
 ## Análise por departamento
 ##    
-for d, df in A.groupby(['Departamento']): 
-    print(d)
-    n_participantes =str(len(df['Aluno'].unique()))
-    n_disciplinas =str(len(df['Disciplina'].unique()))
-    periodo=str(df['Ano'].unique()[0])+'-'+str(df['Período'].unique()[0])
-    #df=df[df['Resposta']!='NA']
-    q='Questao'
-    n_colors=df[q].unique().shape[0]
-    sns.set_palette("Set1", n_colors=n_colors,)   
+#for d, df in A.groupby(['Departamento']): 
+#    print(d)
+#    n_participantes =str(len(df['Aluno'].unique()))
+#    n_disciplinas =str(len(df['Disciplina'].unique()))
+#    periodo=str(df['Ano'].unique()[0])+'-'+str(df['Período'].unique()[0])
+#    #df=df[df['Resposta']!='NA']
+#    q='Questao'
+#    n_colors=df[q].unique().shape[0]
+#    sns.set_palette("Set1", n_colors=n_colors,)   
 
 #    pl.figure()
 #    ct = pd.crosstab(df[q], df['Resposta'].astype('str'))
@@ -1099,16 +1099,16 @@ for d, df in A.groupby(['Departamento']):
 #     
         
 #%%    
-for d, df in B.groupby(['Departamento']): 
-    print(d)
-    n_participantes =str(len(df['Professor'].unique()))
-    n_disciplinas =str(len(df['Disciplina'].unique()))
-    periodo=str(df['Ano'].unique()[0])+'-'+str(df['Período'].unique()[0])
-    
-    #df=df[df['Resposta']!='NA']
-    q='Questao'
-    n_colors=df[q].unique().shape[0]
-    sns.set_palette("Set1", n_colors=n_colors,)   
+#for d, df in B.groupby(['Departamento']): 
+#    print(d)
+#    n_participantes =str(len(df['Professor'].unique()))
+#    n_disciplinas =str(len(df['Disciplina'].unique()))
+#    periodo=str(df['Ano'].unique()[0])+'-'+str(df['Período'].unique()[0])
+#    
+#    #df=df[df['Resposta']!='NA']
+#    q='Questao'
+#    n_colors=df[q].unique().shape[0]
+#    sns.set_palette("Set1", n_colors=n_colors,)   
 
 #    pl.figure()
 #    ct = pd.crosstab(df[q], df['Resposta'].astype('str'))
@@ -1157,11 +1157,11 @@ for d, df in B.groupby(['Departamento']):
 #        pl.show()
     
 #%%
-for d, df in A.groupby(['Questao']):
-    print(d)
-    #df=df[df['Resposta']!='NA']
-    n_colors=df['Resposta'].unique().shape[0]
-    sns.set_palette("Set1", n_colors=n_colors,)   
+#for d, df in A.groupby(['Questao']):
+#    print(d)
+#    #df=df[df['Resposta']!='NA']
+#    n_colors=df['Resposta'].unique().shape[0]
+#    sns.set_palette("Set1", n_colors=n_colors,)   
     
 #    pl.figure()
 #    ct = pd.crosstab(df['Departamento'], df['Resposta'].astype('str'))
@@ -1202,8 +1202,8 @@ for d, df in A.groupby(['Questao']):
 #    #pl.show()
     
 #%%
-for d, df in A.groupby(['Questao']):
-    print(d)
+#for d, df in A.groupby(['Questao']):
+#    print(d)
 #    pl.figure()
 #    #df=df[df['Resposta']!='NA']
 #    ct = pd.crosstab(df['Curso Nome'], df['Resposta'].astype('str'))
@@ -1229,10 +1229,10 @@ for d, df in A.groupby(['Questao']):
 
 #%%
 #sns.set()
-for d, df in A.groupby(['Curso Nome']):
-    print('\n'*3)
-    ii=0
-    df.dropna(subset=['Departamento'], inplace=True)
+#for d, df in A.groupby(['Curso Nome']):
+#    print('\n'*3)
+#    ii=0
+#    df.dropna(subset=['Departamento'], inplace=True)
     #df=df[df['Resposta']!='NA']
     # as loinhas comentadas abaixo geram muitos gráficos -- descomentar se necessário
 #    for w, df1 in df.groupby('Disciplina'):
@@ -1289,9 +1289,9 @@ for d, df in A.groupby(['Curso Nome']):
 #    pl.savefig('resposta_questoes_Q'+d+'.png', dpi=300,bbox_inches='tight')
 #    #pl.show()
 #%%
-corr = X[questoes].corr()
-mask = np.zeros_like(corr, dtype=np.bool)
-mask[np.triu_indices_from(mask)] = True
+#corr = X[questoes].corr()
+#mask = np.zeros_like(corr, dtype=np.bool)
+#mask[np.triu_indices_from(mask)] = True
 
 # Set up the matplotlib figure
 #
@@ -1309,8 +1309,8 @@ mask[np.triu_indices_from(mask)] = True
 #pl.savefig('matriz_corr.png', dpi=300,bbox_inches='tight')
 ##pl.show()
 #%%
-for d, df in A.groupby(['Curso Nome']):
-    print(d)
+#for d, df in A.groupby(['Curso Nome']):
+#    print(d)
     
 #    corr = df[questoes].corr()
 #    mask = np.zeros_like(corr, dtype=np.bool)
@@ -1336,9 +1336,9 @@ for d, df in A.groupby(['Curso Nome']):
 #    pl.savefig('matriz_corr__'+str(emec)+'.png', dpi=300,bbox_inches='tight')
 #    pl.show()
 #%%
-corr = Y[questoes_docentes].corr()
-mask = np.zeros_like(corr, dtype=np.bool)
-mask[np.triu_indices_from(mask)] = True
+#corr = Y[questoes_docentes].corr()
+#mask = np.zeros_like(corr, dtype=np.bool)
+#mask[np.triu_indices_from(mask)] = True
 #
 #f, ax = pl.subplots(figsize=(12, 12))
 ##cmap = sns.diverging_palette(220, 10, as_cmap=True)
@@ -1356,7 +1356,7 @@ A['Cursos']=A['Curso Nome']
 A['id_respondente']=A['Aluno']
 B['id_respondente']=A['Professor']
 
-C = pd.concat([A,B],)
+#C = pd.concat([A,B],)
 #C.drop(['Questao (Docentes)'], inplace=True,axis=1)
 
 #%%
@@ -1712,7 +1712,7 @@ for cod_emec, df1 in A.groupby(['Código e-MEC']):
     head+='\n'+'\section{QUESTÕES APRESENTADAS NO FORMULÁRIO}'
     
     if n_alunos_respondentes<=1:
-        head+='\n'+'{ \it O questionário discente foi omitido pois ocorreu uma das condições listadas a seguir: ausência de alunos respondentes, ou somente um aluno responder o questionário.}'
+        head+='\n'+'{ \it O questionário discente foi omitido pois ocorreu uma das condições listadas a seguir: ausência de alunos respondentes, ou somente um aluno respondeu o questionário.}'
         head+='\n'+''
     else:
         head+='\n'+'As seguintes questões foram {\\bf objeto de avaliação pelos discentes} através do SIGA.'
@@ -1738,19 +1738,23 @@ for cod_emec, df1 in A.groupby(['Código e-MEC']):
 
 #    P = pd.read_csv('lista_questoes_docentes_formulario.csv', sep=';', 
 #                    header=None, error_bad_lines=False, encoding='latin-1')
-    P = pd.read_csv('lista_questoes_docentes.csv', sep=';', 
+    if n_professores_respondentes<=1:
+        head+='\n'+'{ \it O questionário docente foi omitido pois ocorreu uma das condições listadas a seguir: ausência de professores respondentes, ou somente um professor respondeu o questionário.}'
+        head+='\n'+''
+    else:
+        P = pd.read_csv('lista_questoes_docentes.csv', sep=';', 
                     header=None, error_bad_lines=False, encoding='latin-1')
-    head+='\n'+'\small{'    
-    head+='\n'+'\\begin{center}'
-    head+='\n'+'\\begin{tabularx}{\linewidth}{c|X}'
-    for i in range(len(P)):
-        a,b = P.iloc[i]
-        c='\\\\\\\\' if i!=len(P)-1 else ''
-        #c='\\\\\\hline' if i!=len(P)-1 else ''
-        head+='\n'+a+'&'+b+c
-    head+='\n'+'\end{tabularx}'
-    head+='\n'+'\end{center}'
-    head+='\n'+'}'
+        head+='\n'+'\small{'    
+        head+='\n'+'\\begin{center}'
+        head+='\n'+'\\begin{tabularx}{\linewidth}{c|X}'
+        for i in range(len(P)):
+            a,b = P.iloc[i]
+            c='\\\\\\\\' if i!=len(P)-1 else ''
+            #c='\\\\\\hline' if i!=len(P)-1 else ''
+            head+='\n'+a+'&'+b+c
+        head+='\n'+'\end{tabularx}'
+        head+='\n'+'\end{center}'
+        head+='\n'+'}'
 
 
     head+='\n'+'\section{RESPOSTAS}'
@@ -1771,7 +1775,7 @@ for cod_emec, df1 in A.groupby(['Código e-MEC']):
                 ct[i]=0
                 
         ct=ct[np.sort(ct.columns)]
-        sns.set_palette("Set1", n_colors=len(colnames),) 
+        sns.set_palette("Set1", n_colors=6*len(colnames),) 
         g = ct.plot.bar(stacked=True)
         g.legend(title='Escala', loc='center left', bbox_to_anchor=(1.0, 0.5))
         g.set_ylim([0,1])
@@ -1784,28 +1788,29 @@ for cod_emec, df1 in A.groupby(['Código e-MEC']):
         pl.savefig(fn, dpi=300,bbox_inches='tight')
         pl.show()
         head+='\n'+'\includegraphics[width=0.999\linewidth]{'+fn +'}'
+     
+    if n_professores_respondentes>1:
+        pl.figure()
+        ct = pd.crosstab(df2['Questao'], df2['Resposta'].astype('str'))
+        ct = ct/(ct.sum(axis=1).mean())
+        for i in colnames:
+            if not i in ct.columns:
+                ct[i]=0
+                
+        ct=ct[np.sort(ct.columns)]
+        sns.set_palette("Set1", n_colors=6*len(colnames),) 
+        g = ct.plot.bar(stacked=True)
+        g.legend(title='Escala', loc='center left', bbox_to_anchor=(1.0, 0.5))
+        g.set_ylim([0,1])
+        g.set_yticks(ticks=g.get_yticks())
+        g.set_yticklabels(['{:.0f}\%'.format(x*100) for x in g.get_yticks()]) 
+        g.set_ylabel(u'Porcentagem de questões respondidas\n pelos {\\bf DOCENTES}')
+        g.set_xlabel(u'')
+        g.set_title(nome_curso+' ('+str(ano)+'-'+str(periodo)+')')
+        fn1 = 'resposta_docentes_questoes_curso_'+str(cod_emec)+'.png'
+        pl.savefig(fn1, dpi=300,bbox_inches='tight')
+        pl.show()
         
-    pl.figure()
-    ct = pd.crosstab(df2['Questao'], df2['Resposta'].astype('str'))
-    ct = ct/(ct.sum(axis=1).mean())
-    for i in colnames:
-        if not i in ct.columns:
-            ct[i]=0
-            
-    ct=ct[np.sort(ct.columns)]
-    sns.set_palette("Set1", n_colors=len(colnames),) 
-    g = ct.plot.bar(stacked=True)
-    g.legend(title='Escala', loc='center left', bbox_to_anchor=(1.0, 0.5))
-    g.set_ylim([0,1])
-    g.set_yticks(ticks=g.get_yticks())
-    g.set_yticklabels(['{:.0f}\%'.format(x*100) for x in g.get_yticks()]) 
-    g.set_ylabel(u'Porcentagem de questões respondidas\n pelos {\\bf DOCENTES}')
-    g.set_xlabel(u'')
-    g.set_title(nome_curso+' ('+str(ano)+'-'+str(periodo)+')')
-    fn1 = 'resposta_docentes_questoes_curso_'+str(cod_emec)+'.png'
-    pl.savefig(fn1, dpi=300,bbox_inches='tight')
-    pl.show()
-    
     head+='\n'+'\includegraphics[width=0.999\linewidth]{'+fn1+'}'
     head+='\n'+'\caption{\label{fig:resposta_questoes_curso}Distribuição das respostas dos alunos e docentes para as questões apresentadas. '+cap+'}'
     head+='\n'+'\end{figure}'
@@ -1834,36 +1839,38 @@ for cod_emec, df1 in A.groupby(['Código e-MEC']):
         head+='\n'+'\caption{\label{fig:corr_alunos}Correlação das respostas dos alunos do curso '+nome_curso+' para as questões apresentadas. . Entradas com em branco indicam que não havia informação suficiente para o cálculo das correlações.}'
         head+='\n'+'\end{figure}'
     #--
-    corr = df2[questoes].corr()#.fillna(-1)
-    mask = np.zeros_like(corr, dtype=np.bool)
-    mask[np.triu_indices_from(mask)] = True
-    corr=np.round(corr, decimals=2)
-    pl.figure(figsize=(10, 10))
-    sns.heatmap(corr, mask=mask, cmap='jet', #cmap=cmap, #vmin=.0, vmax=1., 
-                center=0, square=True, linewidths=.5, 
-                annot=True, cbar=False, 
-                cbar_kws = dict(use_gridspec=False, location="right",  shrink=0.9)
-                )
-    
-    pl.title(u"Correlação entre as questões respondidas pelos {\\bf DOCENTES}\n"+nome_curso+'.')
-    gn1='matriz_corr__docentes_'+str(cod_emec)+'.png'
-    pl.savefig(gn1, dpi=300,bbox_inches='tight')
-    pl.show()
+    if n_professores_respondentes>1:
+        corr = df2[questoes].corr()#.fillna(-1)
+        mask = np.zeros_like(corr, dtype=np.bool)
+        mask[np.triu_indices_from(mask)] = True
+        corr=np.round(corr, decimals=2)
+        pl.figure(figsize=(10, 10))
+        sns.heatmap(corr, mask=mask, cmap='jet', #cmap=cmap, #vmin=.0, vmax=1., 
+                    center=0, square=True, linewidths=.5, 
+                    annot=True, cbar=False, 
+                    cbar_kws = dict(use_gridspec=False, location="right",  shrink=0.9)
+                    )
         
-    head+='\n'+''    
-    head+='\n'+'\\begin{figure}[h]'
-    head+='\n'+'\centering'
-    head+='\n'+'\includegraphics[width=0.999\linewidth]{'+gn1+'}'
-    head+='\n'+'\caption{\label{fig:corr_docentes}Correlação das respostas dos docentes do curso '+nome_curso+' para as questões apresentadas. . Entradas com em branco indicam que não havia informação suficiente para o cálculo das correlações.}'
-    head+='\n'+'\end{figure}'
+        pl.title(u"Correlação entre as questões respondidas pelos {\\bf DOCENTES}\n"+nome_curso+'.')
+        gn1='matriz_corr__docentes_'+str(cod_emec)+'.png'
+        pl.savefig(gn1, dpi=300,bbox_inches='tight')
+        pl.show()
+            
+        head+='\n'+''    
+        head+='\n'+'\\begin{figure}[h]'
+        head+='\n'+'\centering'
+        head+='\n'+'\includegraphics[width=0.999\linewidth]{'+gn1+'}'
+        head+='\n'+'\caption{\label{fig:corr_docentes}Correlação das respostas dos docentes do curso '+nome_curso+' para as questões apresentadas. . Entradas com em branco indicam que não havia informação suficiente para o cálculo das correlações.}'
+        head+='\n'+'\end{figure}'
     #--
     if n_alunos_respondentes>1:
         df_aux=df1[['Aluno','Ano Ingresso','Tipo Ingresso', 'Estado', 'Bolsa Apoio']].drop_duplicates()
+        sns.set_palette("Set1", n_colors=24)  
         
         pl.figure()
         ct = pd.crosstab(df_aux['Tipo Ingresso'], df_aux['Ano Ingresso'].astype('int').astype('str'))
         n_colors=df1['Tipo Ingresso'].unique().shape[0]+1
-        sns.set_palette("Set1", )#n_colors=n_colors,)   
+         
         g = ct.T.plot.bar(stacked=True)
         g.set_ylabel(u'Número de alunos')
         if g.get_yticks().max()>=2:
@@ -1915,7 +1922,7 @@ for cod_emec, df1 in A.groupby(['Código e-MEC']):
         head+='\n'+'\end{figure}'
         head+='\n'+''
         #-- 
-        ct=pd.crosstab(df1['Ano Ingresso'].astype('int'), df1['Bolsa Apoio']); 
+        ct=pd.crosstab(df_aux['Ano Ingresso'].astype('int'), df_aux['Bolsa Apoio']); 
         g = ct.plot.bar(stacked=True, )    
         g.set_yticklabels(['{:.0f}'.format(x*1) for x in g.get_yticks()]) 
         tit=u'Bolsas de Apoio - Total de alunos:'+str(n_alunos_respondentes)
@@ -2063,14 +2070,14 @@ for cod_dep, df1 in B.groupby(['Departamento']):
     sigilo de participantes e avaliados.'
     
     if n_alunos_respondentes<=1:
-        head+=' '+'Para resguardar o sigilo dos participantes, os resultados relativos aos discentes serão omitidos na ausência de alunos respondentes ou na eventualidade de somente um aluno responder o questionário.'    
+        head+=' '+'Para resguardar o sigilo dos participantes, os resultados relativos aos discentes serão omitidos na ausência de alunos respondentes ou na eventualidade de somente um aluno respondeu o questionário.'    
 
     
     head+='\n'+'\section{QUESTÕES APRESENTADAS NOS FORMULÁRIOS}'
     
 
     if n_alunos_respondentes<=1:
-        head+='\n'+'{ \it O questionário discente foi omitido pois ocorreu uma das condições listadas a seguir: ausência de alunos respondentes, ou somente um aluno responder o questionário.}'
+        head+='\n'+'{ \it O questionário discente foi omitido pois ocorreu uma das condições listadas a seguir: ausência de alunos respondentes, ou somente um aluno respondeu o questionário.}'
         head+='\n'+''
     else:
         head+='\n'+'As seguintes questões foram {\\bf objeto de avaliação pelos discentes} através do SIGA.'
@@ -2131,7 +2138,7 @@ for cod_dep, df1 in B.groupby(['Departamento']):
             ct[i]=0
             
     ct=ct[np.sort(ct.columns)]
-    sns.set_palette("Set1", n_colors=len(colnames),) 
+    sns.set_palette("Set1", n_colors=6*len(colnames),) 
     g = ct.plot.bar(stacked=True)
     g.legend(title='Escala', loc='center left', bbox_to_anchor=(1.0, 0.5))
     g.set_ylim([0,1])
@@ -2154,7 +2161,7 @@ for cod_dep, df1 in B.groupby(['Departamento']):
                 ct[i]=0
                 
         ct=ct[np.sort(ct.columns)]
-        sns.set_palette("Set1", n_colors=len(colnames),) 
+        sns.set_palette("Set1", n_colors=6*len(colnames),) 
         g = ct.plot.bar(stacked=True)
         g.legend(title='Escala', loc='center left', bbox_to_anchor=(1.0, 0.5))
         g.set_ylim([0,1])
