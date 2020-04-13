@@ -1538,7 +1538,7 @@ B['id_respondente']=A['Professor']
 #
 #
 #    head+='\n'+'\section{RESPOSTAS}'
-#    head+='\n'+"As questões podem ser respondidas com um número de 1 a 5 numa escala que vai de {\it Discordo Totalmente} (1) a {\it Concordo Totalmente} (5). Não sendo permitidas múltiplas respostas e sendo possível a alteração antes do envio do formulário. O valor 0 (zero) indica {\it Não se Aplica}."
+#    head+='\n'+"As questões podem ser respondidas com um número de 1 a 5 numa escala que vai de {\it Discordo Totalmente} (1) a {\it Concordo Totalmente} (5). Não são permitidas múltiplas respostas e sendo possível a alteração antes do envio do formulário. O valor 0 (zero) indica {\it Não se Aplica}."
 #    head+='\n'+''    
 #    head+='\n'+'\\begin{figure}[h]'
 #    head+='\n'+'\centering'
@@ -1759,7 +1759,7 @@ for cod_emec, df1 in A.groupby(['Código e-MEC']):
 
 
     head+='\n'+'\section{RESPOSTAS}'
-    head+='\n'+"As questões podem ser respondidas com um número de 1 a 5 numa escala que vai de {\it Discordo Totalmente} (1) a {\it Concordo Totalmente} (5). Não sendo permitidas múltiplas respostas e sendo possível a alteração antes do envio do formulário. O valor 0 (zero) indica {\it Não se Aplica}."
+    head+='\n'+"As questões podem ser respondidas com um número de 1 a 5 numa escala que vai de {\it Discordo Totalmente} (1) a {\it Concordo Totalmente} (5). Não são permitidas múltiplas respostas e sendo possível a alteração antes do envio do formulário. O valor 0 (zero) indica {\it Não se Aplica}."
     head+='\n'+''          
     #--
     head+='\n'+''    
@@ -2121,7 +2121,7 @@ for cod_dep, df1 in B.groupby(['Departamento']):
     
 
     head+='\n'+'\section{RESPOSTAS}'
-    head+='\n'+"As questões podem ser respondidas com um número de 1 a 5 numa escala desde {\it Discordo Totalmente} (1) a {\it Concordo Totalmente} (5). Não sendo permitidas múltiplas respostas e sendo possível a alteração antes do envio do formulário. O valor 0 (zero) indica {\it Não se Aplica}."
+    head+='\n'+"As questões podem ser respondidas com um número de 1 a 5 numa escala desde {\it Discordo Totalmente} (1) a {\it Concordo Totalmente} (5). Não são permitidas múltiplas respostas e sendo possível a alteração antes do envio do formulário. O valor 0 (zero) indica {\it Não se Aplica}."
     head+='\n'+''    
     head+='\n'+'Os nomes das disciplinas foram alterados para garantir a segurança da informações de modo que não seja possível a identificação das turmas, dos alunos  e dos professores que responderam a avaliação.'    
     head+='\n'+''  
