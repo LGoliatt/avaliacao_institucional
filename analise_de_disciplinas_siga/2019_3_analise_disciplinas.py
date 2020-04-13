@@ -1657,6 +1657,7 @@ for cod_emec, df1 in A.groupby(['Código e-MEC']):
     head+='\n'+'\\usepackage[utf8]{inputenc}'
     head+='\n'+'\\usepackage[brazil]{babel}'
     head+='\n'+'\\usepackage{fontenc}'
+    head+='\n'+'\\usepackage{times}'
     head+='\n'+'\\usepackage{indentfirst}'
     head+='\n'+'\\usepackage{graphicx,tabularx}'
     head+='\n'+'\\usepackage[]{hyperref}'
@@ -2142,7 +2143,7 @@ for cod_dep, df1 in B.groupby(['Departamento']):
     g = ct.plot.bar(stacked=True)
     g.legend(title='Escala', loc='center left', bbox_to_anchor=(1.0, 0.5))
     g.set_ylim([0,1])
-    g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
+    g.set_yticklabels(['{:.0f}\%'.format(x*100) for x in g.get_yticks()]) 
     g.set_ylabel(u'Porcentagem de questões respondidas\n pelos {\\bf DOCENTES}')
     g.set_xlabel(u'')
     g.set_title(cod_dep+' ('+str(ano)+'-'+str(periodo)+')')
@@ -2165,7 +2166,7 @@ for cod_dep, df1 in B.groupby(['Departamento']):
         g = ct.plot.bar(stacked=True)
         g.legend(title='Escala', loc='center left', bbox_to_anchor=(1.0, 0.5))
         g.set_ylim([0,1])
-        g.set_yticklabels(['{:.0f}%'.format(x*100) for x in g.get_yticks()]) 
+        g.set_yticklabels(['{:.0f}\%'.format(x*100) for x in g.get_yticks()]) 
         g.set_ylabel(u'Porcentagem de questões respondidas\n pelos {\\bf ALUNOS}')
         g.set_xlabel(u'')
         g.set_title(cod_dep+' ('+str(ano)+'-'+str(periodo)+')')
